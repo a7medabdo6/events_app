@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "notificationapp",
+    "slug": "notificationapp",
+    "privacy": "public",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FFFFFF"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d7124ab9-ffb1-4679-bbaa-bfc40bed387e"
+      }
+    },
+    "android": {
+      "package": "com.a7medabdo.notificationapp"
+    }
+  }
+}

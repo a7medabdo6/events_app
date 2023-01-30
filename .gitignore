@@ -1,0 +1,62 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/calendar-event-app-master/node_modules
+/calendar-event-app-master/.pnp
+.pnp.js
+
+# testing
+/calendar-event-app-master/coverage
+
+# production
+/calendar-event-app-master/build
+
+# misc
+.DS_Store
+calendar-event-app-master/.env
+calendar-event-app-master/.env.local
+calendar-event-app-master/.env.development.local
+calendar-event-app-master/.env.test.local
+calendar-event-app-master/.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+
+# compiled output
+Backend/dist
+Backend/node_modules
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+
+# Tests
+/coverage
+/.nyc_output
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
