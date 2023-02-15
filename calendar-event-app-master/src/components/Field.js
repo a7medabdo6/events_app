@@ -6,6 +6,7 @@ const Field = (props) => {
   return (
     <TextInput
       {...props}
+      
       style={{
         borderRadius: 10,
         color: "black",

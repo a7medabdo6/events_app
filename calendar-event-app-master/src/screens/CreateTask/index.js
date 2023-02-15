@@ -146,6 +146,8 @@ export default function CreateTask({ navigation, route }) {
   const [currentDay, setCurrentDay] = useState(moment().format());
   const [taskText, setTaskText] = useState("");
   const [notesText, setNotesText] = useState("");
+  const [client, setClient] = useState("client A");
+
   const [visibleHeight, setVisibleHeight] = useState(
     Dimensions.get("window").height,
   );
@@ -210,6 +212,7 @@ export default function CreateTask({ navigation, route }) {
           key: uuidv4(),
           title: taskText,
           notes: notesText,
+          client,
           alarm: {
             time: alarmTime,
             isOn: isAlarmSet,
@@ -291,6 +294,7 @@ export default function CreateTask({ navigation, route }) {
                 }}
                 current={currentDay}
                 minDate={moment().format()}
+                // maxDate=()
                 horizontal
                 pastScrollRange={0}
                 pagingEnabled
@@ -306,7 +310,6 @@ export default function CreateTask({ navigation, route }) {
                   setAlarmTime(day.dateString);
                 }}
                 monthFormat="yyyy MMMM"
-                hideArrows
                 markingType="custom"
                 theme={{
                   selectedDayBackgroundColor: "#2196f3",

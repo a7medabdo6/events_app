@@ -13,6 +13,7 @@ import {
   BadRequestException,
   HttpException,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { DocsService } from './Docs.service';
 import { CreateDocsDto } from './dto/create-Docs.dto';
@@ -30,8 +31,8 @@ import { DocsDto } from './dto/Docs.dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UsersService } from 'src/users/users.service';
 @Controller('docs')
-@UseInterceptors(CurrentUserInterceptor)
-@UseGuards(AuthGuard)
+// @UseInterceptors(CurrentUserInterceptor)
+// @UseGuards(AuthGuard)
 @Serialize(DocsDto)
 export class DocsController {
   constructor(
@@ -45,46 +46,25 @@ export class DocsController {
   // }
 
   @Get()
-  findAll() {
-    return this.DocsService.findAll();
+  findAll(@Query('ClientId') ClientId: number) {
+    return this.DocsService.findAll(ClientId);
   }
   @Post('create')
-  @UseInterceptors(
-    FileFieldsInterceptor([{ name: 'doc', maxCount: 1 }], {
-      fileFilter: FileFilter,
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, callback) => {
-          const uniqueSuffix =
-            Date.now() + '-' + Math.round(Math.random() * 1e9);
-          const ext = extname(file.originalname);
-          const filename = `${uniqueSuffix}${ext}`;
-          callback(null, filename);
-        },
-      }),
-    }),
-  )
   async uploadFile(
     @Body() body: CreateDocsDto,
 
-    @UploadedFiles()
-    files: {
-      doc?: Express.Multer.File[];
-    },
     @Req() req: any,
   ) {
-    const isEmpty = Object.keys(files).length === 0;
-    if (isEmpty || !files || req.fileValidationError) {
-      throw new BadRequestException(req.fileValidationError);
-    }
+    // const isEmpty = Object.keys(files).length === 0;
+    // if (isEmpty || !files || req.fileValidationError) {
+    //   throw new BadRequestException(req.fileValidationError);
+    // }
 
-    console.log(files, 'test');
     const User = await this.usersService.findOne(+body.user);
 
     const product = await this.DocsService.create(
       {
         ...body,
-        doc: files?.doc?.[0]?.filename,
       },
       User,
     );

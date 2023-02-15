@@ -1,9 +1,47 @@
-import React from "react";
-import { View, Text } from "react-native";
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import * as DocumentPicker from "expo-document-picker";
+import useStore from "../store/store";
+import * as FileSystem from "expo-file-system";
 
-const SendDoc = () => {
+const SendDoc = ({ route }) => {
+  const item = route?.params?.item;
+  const user = route?.params?.user;
+  const [uri, seturi] = useState("");
+  const [name, setname] = useState("");
+  const [type, settype] = useState("");
+  const { setUploadDoc } = useStore((state) => ({
+    setUploadDoc: state.setUploadDoc,
+  }));
+
+  const _pickDocument = async () => {
+    console.log(item, "item");
+
+    let result = await DocumentPicker.getDocumentAsync({
+      base64: true,
+    });
+
+    alert(result.uri);
+    settype(result.mimeType);
+    setname(result.name);
+    seturi(result.uri);
+    console.log(result);
+    if (result.type != "cancel") {
+      const resultBase64 = await FileSystem.readAsStringAsync(result.uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      // console.log(resultBase64, "resultBase64");
+
+      setUploadDoc({
+        user: user?.id,
+        type: item,
+        doc: resultBase64,
+        typeOfFile: result.mimeType,
+      });
+    }
+  };
   return (
     <View
       style={{
@@ -39,44 +77,45 @@ const SendDoc = () => {
           height: "80%",
         }}
       >
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-start",
-            paddingTop: 20,
-            width: 250,
-          }}
-        >
+        <TouchableOpacity onPress={() => _pickDocument()}>
           <View
             style={{
               display: "flex",
-              justifyContent: "center",
-              width: 60,
-              height: 60,
-              borderColor: "white",
-              borderRadius: 50,
-              borderWidth: 2,
-              alignItems: "center",
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              paddingTop: 20,
+              width: 250,
             }}
           >
-            <AntDesign name="scan1" size={24} color="white" />
-          </View>
+            <View
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                width: 60,
+                height: 60,
+                borderColor: "white",
+                borderRadius: 50,
+                borderWidth: 2,
+                alignItems: "center",
+              }}
+            >
+              <AntDesign name="scan1" size={24} color="white" />
+            </View>
 
-          <View
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              paddingStart: 20,
-              height: 60,
-            }}
-          >
-            <Text style={{ color: "white", fontSize: 20 }}>
-              Scan a Document
-            </Text>
+            <View
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                paddingStart: 20,
+                height: 60,
+              }}
+            >
+              <Text style={{ color: "white", fontSize: 20 }}>
+                Scan a Document
+              </Text>
+            </View>
           </View>
-        </View>
-
+        </TouchableOpacity>
         <View
           style={{
             display: "flex",

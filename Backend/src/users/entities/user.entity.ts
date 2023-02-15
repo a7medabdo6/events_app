@@ -1,4 +1,5 @@
 import { Docs } from 'src/Docs/entities/Docs.entity';
+import { Meeting } from 'src/meeting/entities/meeting.entity';
 import {
   Column,
   Entity,
@@ -22,6 +23,10 @@ export class User {
   email: string;
   @Column()
   code: string;
+  @Column()
+  phone: string;
+  @Column()
+  photo: string;
 
   @Column({
     type: 'enum',
@@ -53,4 +58,8 @@ export class User {
   @OneToMany(() => Docs, (Docs) => Docs.user) // specify inverse side as a second parameter
   @JoinColumn()
   Docs: Docs;
+
+  @OneToMany(() => Meeting, (Meeting) => Meeting.user) // specify inverse side as a second parameter
+  @JoinColumn()
+  meetings: Meeting;
 }

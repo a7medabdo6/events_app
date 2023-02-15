@@ -2,8 +2,13 @@ import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { StyleSheet, View, Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  AntDesign,
+} from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import Routes from "./routes";
 
 import {
   CreateTask,
@@ -15,6 +20,7 @@ import {
 } from "@calendar/screens";
 import StackNav from "./StackNav";
 import TestCards from "../screens/TestCards";
+import ClientsAndProfileAndUpload from "./ClientsAndProfileAndUpload";
 const Tab = createBottomTabNavigator();
 
 export default function MyTabs() {
@@ -48,8 +54,27 @@ export default function MyTabs() {
           }}
         />
         <Tab.Screen
-          name="AnimatedFlatList"
-          component={AnimatedFlatList}
+          component={CreateTask}
+          name={Routes.CREATE_TASK}
+          options={{
+            headerShown: false,
+
+            tabBarLabel: "",
+            tabBarIcon: ({ color, size, focused }) => (
+              <View style={focused && styles.activeBack}>
+                <AntDesign
+                  name="pluscircleo"
+                  size={24}
+                  color={color}
+                  style={focused && styles.active}
+                />
+              </View>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="ClientsAndProfileAndUpload"
+          component={ClientsAndProfileAndUpload}
           options={{
             headerShown: false,
             tabBarLabel: "",
@@ -65,7 +90,7 @@ export default function MyTabs() {
             ),
           }}
         />
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Profile"
           component={Profile}
           options={{
@@ -83,8 +108,8 @@ export default function MyTabs() {
               </View>
             ),
           }}
-        />
-        <Tab.Screen
+        /> */}
+        {/* <Tab.Screen
           name="Upload"
           component={TestCards}
           options={{
@@ -102,7 +127,7 @@ export default function MyTabs() {
               </View>
             ),
           }}
-        />
+        /> */}
       </Tab.Navigator>
     </NavigationContainer>
   );

@@ -1,3 +1,4 @@
+import { useIsFocused } from "@react-navigation/native";
 import React, { Fragment, useEffect, useState } from "react";
 import {
   Alert,
@@ -15,12 +16,24 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import AnimatedList from "../../components/AnimatedFlateList";
+import useStore from "../../store/store";
 
 export default function AnimatedFlatList({ navigation, route }) {
+  const isFocused = useIsFocused();
+  const { getAllUsers, allusers } = useStore((state) => ({
+    getAllUsers: state.getAllUsers,
+    allusers: state.allusers,
+  }));
+  useEffect(() => {
+    getAllUsers();
+
+    return () => {};
+  }, [isFocused]);
+
   return (
     <Fragment>
       <SafeAreaView style={{ height: "100%" }}>
-        <AnimatedList />
+        <AnimatedList users={allusers} />
       </SafeAreaView>
     </Fragment>
   );

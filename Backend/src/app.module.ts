@@ -17,6 +17,8 @@ import { CategoryModule } from './category/category.module';
 import { DocsModule } from './Docs/Docs.module';
 import { ServiceUserModule } from './service-user/service-user.module';
 import { ServiceUser } from './service-user/entities/service-user.entity';
+import { MeetingModule } from './meeting/meeting.module';
+import { Meeting } from './meeting/entities/meeting.entity';
 
 @Module({
   imports: [
@@ -38,12 +40,13 @@ import { ServiceUser } from './service-user/entities/service-user.entity';
       username: 'root2',
       password: '',
       database: 'events',
-      entities: [User, Docs, ServiceUser],
+      entities: [User, Docs, ServiceUser, Meeting],
       synchronize: true,
     }),
     UsersModule,
     DocsModule,
     ServiceUserModule,
+    MeetingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

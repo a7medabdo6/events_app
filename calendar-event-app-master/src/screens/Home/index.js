@@ -21,6 +21,7 @@ import DateTimePicker from "react-native-modal-datetime-picker";
 import { Task } from "@calendar/components";
 import { useStore } from "@calendar/store";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const styles = StyleSheet.create({
   taskListContent: {
@@ -152,13 +153,19 @@ const datesWhitelist = [
 ];
 
 export default function Home({ navigation }) {
-  const { updateSelectedTask, deleteSelectedTask, todo } = useStore(
+  const { updateSelectedTask, deleteSelectedTask, todo, role } = useStore(
     (state) => ({
       updateSelectedTask: state.updateSelectedTask,
       deleteSelectedTask: state.deleteSelectedTask,
       todo: state.todo,
+      role: state.role,
     }),
   );
+  useEffect(() => {
+    console.log(role, "role");
+    AsyncStorage.removeItem("user");
+    return () => {};
+  }, [role]);
 
   const [todoList, setTodoList] = useState([]);
   const [markedDate, setMarkedDate] = useState([]);
@@ -609,7 +616,7 @@ export default function Home({ navigation }) {
             setCurrentDate(selectedDate);
           }}
         />
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() =>
             navigation.navigate("CreateTask", {
               updateCurrentTask: updateCurrentTask,
@@ -626,7 +633,7 @@ export default function Home({ navigation }) {
               width: 30,
             }}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <View
           style={{
             width: "100%",
@@ -703,6 +710,14 @@ export default function Home({ navigation }) {
                         }}
                       >
                         {item.notes}
+                      </Text>
+                      <Text
+                        style={{
+                          color: "#BBBBBB",
+                          fontSize: 14,
+                        }}
+                      >
+                        {item?.client}
                       </Text>
                     </View>
                   </View>

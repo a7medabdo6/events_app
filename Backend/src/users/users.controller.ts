@@ -10,6 +10,7 @@ import {
   Request,
   Session,
   UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import { ApiProperty } from '@nestjs/swagger';
@@ -72,8 +73,9 @@ export class UsersController {
   }
   /*************************************************** */
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query('userRole') userRole: string) {
+    console.log(userRole, 'userRole');
+    return this.usersService.findAll(userRole);
   }
 
   @Get(':id')

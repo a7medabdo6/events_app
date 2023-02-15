@@ -23,7 +23,7 @@ import Icon from "@expo/vector-icons/FontAwesome";
 import DetailsButtonSheet from "./DetailsButtonSheet";
 import { AntDesign } from "@expo/vector-icons";
 
-const Cards = () => {
+const Cards = ({ user }) => {
   const [visible, setVisible] = useState(false);
 
   const toggleBottomNavigationView = () => {
@@ -32,8 +32,57 @@ const Cards = () => {
   };
 
   return (
-    <View style={{ marginTop: 20 }}>
+    <View style={{ marginTop: 20, width: "90%" }}>
       <TouchableOpacity onPress={toggleBottomNavigationView}>
+        <View style={[styles.card, styles.shadowProp]}>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingTop: 20,
+              marginBottom: 13,
+            }}
+          >
+            <View style={{ display: "flex", flexDirection: "row" }}>
+              <View style={{ marginHorizontal: 15 }}>
+                <Image
+                  style={{ width: 100, height: 100, borderRadius: 50 }}
+                  source={require("../images/logo.jpg")}
+                />
+              </View>
+              <View
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "flex-start",
+                }}
+              >
+                <Text
+                  style={{ color: "black", fontSize: 20, letterSpacing: 1 }}
+                >
+                  {user?.username}
+                </Text>
+                <Text>{user?.role}</Text>
+                <Text style={{ color: "#78ABC6" }}>View Profile</Text>
+              </View>
+            </View>
+
+            <View
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingEnd: 30,
+              }}
+            >
+              <Icon name="angle-right" size={30} color="black" />
+            </View>
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      {/* <TouchableOpacity onPress={toggleBottomNavigationView}>
         <View style={[styles.card, styles.shadowProp]}>
           <View
             style={{
@@ -80,56 +129,7 @@ const Cards = () => {
             </View>
           </View>
         </View>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={toggleBottomNavigationView}>
-        <View style={[styles.card, styles.shadowProp]}>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingTop: 20,
-              marginBottom: 13,
-            }}
-          >
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <View style={{ marginHorizontal: 15 }}>
-                <Image
-                  style={{ width: 100, height: 100, borderRadius: 50 }}
-                  source={require("../images/logo.jpg")}
-                />
-              </View>
-              <View
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "flex-start",
-                }}
-              >
-                <Text
-                  style={{ color: "black", fontSize: 20, letterSpacing: 1 }}
-                >
-                  Karissa Pendl
-                </Text>
-                <Text>Partner</Text>
-                <Text style={{ color: "#78ABC6" }}>View Profile</Text>
-              </View>
-            </View>
-
-            <View
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                paddingEnd: 30,
-              }}
-            >
-              <Icon name="angle-right" size={30} color="black" />
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       {/* <Button
           onPress={toggleBottomNavigationView}
@@ -168,7 +168,7 @@ const Cards = () => {
             </TouchableOpacity>
 
             <View style={{ flex: 1 }}>
-              <DetailsButtonSheet />
+              <DetailsButtonSheet user={user} />
             </View>
           </View>
         </View>

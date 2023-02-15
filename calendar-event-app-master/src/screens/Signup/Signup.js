@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -10,8 +10,26 @@ import Btn from "../../components/Btn";
 import { darkGreen } from "../../components/Constants";
 import Field from "../../components/Field";
 import Background from "../../components/Background";
+import useStore from "../../store/store";
 
 const Signup = (props) => {
+  const [Username, setUsername] = useState(false);
+
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+  const [Code, setCode] = useState("12345");
+  const [role, setrole] = useState("buyer");
+
+  const [ConfirmPass, setConfirmPass] = useState("");
+  const [localError, setlocalError] = useState(false);
+
+  const { setSignUp, errorForSignUp, setErrorForSignupEmpty } = useStore(
+    (state) => ({
+      setSignUp: state.setSignUp,
+      errorForSignUp: state.errorForSignUp,
+      setErrorForSignupEmpty: state.setErrorForSignupEmpty,
+    }),
+  );
   return (
     <Background>
       <ScrollView>
@@ -60,14 +78,30 @@ const Signup = (props) => {
                 marginTop: 40,
               }}
             >
-              <Field placeholder="First and Last Name" />
               <Field
-                placeholder="Email / Username"
+                placeholder="First and Last Name"
+                onChangeText={(e) => setUsername(e)}
+              />
+              <Field
+                onChangeText={(e) => setemail(e)}
+                placeholder="Email "
                 keyboardType={"email-address"}
               />
-              <Field placeholder="Contact Number" keyboardType={"number"} />
-              <Field placeholder="Password" secureTextEntry={true} />
-              <Field placeholder="Confirm Password" secureTextEntry={true} />
+              <Field
+                placeholder="Code"
+                onChangeText={(e) => setCode(e)}
+                keyboardType={"number"}
+              />
+              <Field
+                placeholder="Password"
+                onChangeText={(e) => setpassword(e)}
+                secureTextEntry={true}
+              />
+              <Field
+                placeholder="Confirm Password"
+                onChangeText={(e) => setConfirmPass(e)}
+                secureTextEntry={true}
+              />
               <View
                 style={{
                   display: "flex",
@@ -78,8 +112,29 @@ const Signup = (props) => {
                   justifyContent: "center",
                 }}
               >
+                {localError && (
+                  <Text style={{ color: "red", fontSize: 15 }}>
+                    {localError}
+                  </Text>
+                )}
+                {errorForSignUp &&
+                  typeof errorForSignUp != "string" &&
+                  errorForSignUp?.map((item) => {
+                    return (
+                      <Text
+                        style={{ color: "red", fontSize: 15, width: "100%" }}
+                      >
+                        {item}
+                      </Text>
+                    );
+                  })}
+                {errorForSignUp && typeof errorForSignUp == "string" && (
+                  <Text style={{ color: "red", fontSize: 15, width: "100%" }}>
+                    {errorForSignUp}
+                  </Text>
+                )}
                 <Text style={{ color: "grey", fontSize: 15 }}>
-                  By signing in, you agree to our{" "}
+                  By signing in, you agree to our
                 </Text>
                 <Text
                   style={{ color: darkGreen, fontWeight: "bold", fontSize: 15 }}
@@ -112,8 +167,21 @@ const Signup = (props) => {
                 bgColor={darkGreen}
                 btnLabel="Signup"
                 Press={() => {
-                  alert("Accoutn created");
-                  props.navigation.navigate("login");
+                  if (password != ConfirmPass) {
+                    setErrorForSignupEmpty();
+                    setlocalError("password does not match!");
+                    return;
+                  }
+                  setlocalError(false);
+                  setSignUp({
+                    email,
+                    password,
+                    code: Code,
+                    username: Username,
+                    role,
+                  });
+                  // alert("Accoutn created");
+                  // props.navigation.navigate("login");
                 }}
               />
             </View>
@@ -126,7 +194,7 @@ const Signup = (props) => {
               }}
             >
               <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                Already have an account ?{" "}
+                Already have an account ?
               </Text>
               <TouchableOpacity
                 onPress={() => props.navigation.navigate("login")}

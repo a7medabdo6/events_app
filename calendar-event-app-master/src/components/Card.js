@@ -24,6 +24,7 @@ import { Task } from "@calendar/components";
 import { useStore } from "@calendar/store";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Checkbox from "./Checkbox";
+import { useNavigation } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   taskListContent: {
@@ -147,9 +148,15 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function Home() {
-  const [todoList, setTodoList] = useState([1, 2, 3, 4]);
-
+export default function Home({ user }) {
+  const [todoList, setTodoList] = useState([
+    "review",
+    "servuy",
+    "submit",
+    "check",
+    "payment",
+  ]);
+  const navigation = useNavigation();
   return (
     <Fragment>
       <SafeAreaView
@@ -170,7 +177,16 @@ export default function Home() {
             }}
           >
             {todoList.map((item) => (
-              <TouchableOpacity key={1} style={styles.taskListContent}>
+              <TouchableOpacity
+                key={1}
+                onPress={() =>
+                  user?.Docs?.filter((docitem) => docitem.type == item)
+                    ?.length > 0
+                    ? null
+                    : navigation.push("upload", { item, user })
+                }
+                style={styles.taskListContent}
+              >
                 <View
                   style={{
                     marginLeft: 13,
@@ -195,7 +211,13 @@ export default function Home() {
                     <AntDesign
                       name="checkcircleo"
                       size={24}
-                      color="#2196f3"
+                      // color="#2196f3"
+                      color={
+                        user?.Docs?.filter((docitem) => docitem.type == item)
+                          ?.length > 0
+                          ? "#2196f3"
+                          : "grey"
+                      }
                       style={{ marginRight: 8 }}
                     />
                     <Text
@@ -205,7 +227,7 @@ export default function Home() {
                         fontWeight: "700",
                       }}
                     >
-                      {"Survey num 1"}
+                      {item}
                     </Text>
                   </View>
                   <View>

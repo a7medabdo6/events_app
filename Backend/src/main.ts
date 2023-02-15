@@ -10,6 +10,7 @@ import { AppModule } from './app.module';
 const cookieSession = require('cookie-session');
 const express = require('express');
 import { join } from 'path';
+import { urlencoded, json } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -32,6 +33,8 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
+  app.use(json({ limit: '50mb' }));
+  app.use(urlencoded({ extended: true, limit: '50mb' }));
   app.use(
     cookieSession({
       keys: ['secret'],

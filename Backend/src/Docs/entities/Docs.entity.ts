@@ -17,11 +17,14 @@ export class Docs {
   @Column()
   type: string;
 
-  @Column()
+  @Column({ type: 'json' })
   doc: string;
 
   @Column()
   extra: string;
+
+  @Column()
+  typeOfFile: string;
 
   @ManyToOne(() => User, (user) => user.Docs) // specify inverse side as a second parameter
   user: User;

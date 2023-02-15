@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
 import {
   ActivityIndicator,
@@ -8,6 +9,7 @@ import {
   View,
   Image,
   Animated,
+  TouchableOpacity,
 } from "react-native";
 
 const marginBottomItem = 20;
@@ -20,11 +22,11 @@ const APP_ID = "6081e1754a7541617d41334a";
 const backgroundImg =
   "https://i.pinimg.com/originals/2a/24/74/2a24740658e1910bcfedbbdd83098c4e.jpg";
 
-const App = () => {
-  const [data, setData] = useState([1, 2, 3, 1, 2, 3, 1, 2, 31, 2, 31, 2, 3]);
-  const [isLoading, setIsloading] = useState(false);
+const App = ({ users }) => {
+  const [data, setData] = useState([1, 2, 3]);
+  const [isLoading, setIsloading] = useState(true);
   const Yscroll = React.useRef(new Animated.Value(0)).current;
-
+  const navigation = useNavigation();
   const getAllUsers = () => {
     // fetch(`${BASE_URL}/user`, { headers: { "app-id": APP_ID } })
     //   .then((res) => res.json())
@@ -35,53 +37,60 @@ const App = () => {
     //   .finally(() => setIsloading(false));
   };
   useEffect(() => {
-    //setIsloading(true);
-    getAllUsers();
+    if (users?.length > 0) {
+      setIsloading(false);
+    }
     return () => {};
-  }, []);
+  }, [users]);
   const renderUser = ({ item, index }) => {
     const scale = Yscroll.interpolate({
       inputRange: [-1, 0, sizeOfItem * index, sizeOfItem * (index + 2)],
       outputRange: [1, 1, 1, 0],
     });
     return (
-      <Animated.View
-        style={[
-          styles.item,
-          {
-            transform: [{ scale }],
-          },
-        ]}
+      <TouchableOpacity
+        onPress={() => navigation.push("Profile", { user: item })}
       >
-        <Image
-          style={styles.image}
-          source={require("../../assets/avatar3.png")}
-          resizeMode="contain"
-          contentContainerStyle={{ padding: 20 }}
-        />
-        <View style={styles.wrapText}>
-          <Text style={styles.fontSize}>John </Text>
-          <Text style={{ fontSize: 19, marginVertical: 3 }}>
-            Hohn@example.com
-          </Text>
-          <View
-            style={{
-              width: 100,
-              backgroundColor: "#2196f3",
-              borderRadius: 25,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              paddingVertical: 5,
-              marginVertical: 0,
-            }}
-          >
-            <Text style={{ fontSize: 19, fontWeight: "bold", color: "white" }}>
-              Seller
+        <Animated.View
+          style={[
+            styles.item,
+            {
+              transform: [{ scale }],
+            },
+          ]}
+        >
+          <Image
+            style={styles.image}
+            source={require("../../assets/avatar3.png")}
+            resizeMode="contain"
+            contentContainerStyle={{ padding: 20 }}
+          />
+          <View style={styles.wrapText}>
+            <Text style={styles.fontSize}>{item.username} </Text>
+            <Text style={{ fontSize: 19, marginVertical: 3 }}>
+              {item.email}
             </Text>
+            <View
+              style={{
+                width: 100,
+                backgroundColor: "#2196f3",
+                borderRadius: 25,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingVertical: 5,
+                marginVertical: 0,
+              }}
+            >
+              <Text
+                style={{ fontSize: 19, fontWeight: "bold", color: "white" }}
+              >
+                {item.role?.toUpperCase()}
+              </Text>
+            </View>
           </View>
-        </View>
-      </Animated.View>
+        </Animated.View>
+      </TouchableOpacity>
     );
   };
 
@@ -108,7 +117,7 @@ const App = () => {
         <ActivityIndicator />
       ) : (
         <Animated.FlatList
-          data={data}
+          data={users}
           keyExtractor={(item) => `key-${item.id}`}
           renderItem={renderUser}
           contentContainerStyle={{

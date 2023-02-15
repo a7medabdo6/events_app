@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, Touchable, TouchableOpacity } from "react-native";
 import Background from "../../components/Background";
 import Btn from "../../components/Btn";
@@ -7,8 +7,12 @@ import Field from "../../components/Field";
 import { useNavigation } from "@react-navigation/native";
 import useStore from "../../store/store";
 const Login = (props) => {
-  const { setLogin } = useStore((state) => ({
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+
+  const { setLogin, error } = useStore((state) => ({
     setLogin: state.setLogin,
+    error: state.error,
   }));
   return (
     <Background>
@@ -59,10 +63,15 @@ const Login = (props) => {
             }}
           >
             <Field
+              onChangeText={(e) => setemail(e)}
               placeholder="Email / Username"
               keyboardType={"email-address"}
             />
-            <Field placeholder="Password" secureTextEntry={true} />
+            <Field
+              placeholder="Password"
+              onChangeText={(e) => setpassword(e)}
+              secureTextEntry={true}
+            />
             <View
               style={{
                 width: "78%",
@@ -70,6 +79,13 @@ const Login = (props) => {
                 marginBottom: 100,
               }}
             >
+              {error && (
+                <Text
+                  style={{ color: "red", fontWeight: "bold", fontSize: 16 }}
+                >
+                  {error}
+                </Text>
+              )}
               <Text
                 style={{ color: darkGreen, fontWeight: "bold", fontSize: 16 }}
               >
@@ -80,7 +96,7 @@ const Login = (props) => {
               textColor="white"
               bgColor={darkGreen}
               btnLabel="Login"
-              Press={() => setLogin()}
+              Press={() => setLogin({ email, password })}
             />
             <View
               style={{

@@ -6,6 +6,7 @@ import { CalendarNavigation } from "@calendar/navigation";
 import BottomNav from "./navigation/BottomNav";
 import * as Calendar from "expo-calendar";
 import AuthStack from "./navigation/AuthStack";
+import ClientStack from "./navigation/ClientStack";
 
 import {
   CreateTask,
@@ -17,8 +18,13 @@ import {
 } from "@calendar/screens";
 import { NavigationContainer } from "@react-navigation/native";
 import { useStore } from "@calendar/store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const App = () => {
-  const { isAuth } = useStore((state) => ({ isAuth: state.isAuth }));
+  const { isAuth, role, setAuth } = useStore((state) => ({
+    isAuth: state.isAuth,
+    role: state.role,
+    setAuth: state.setAuth,
+  }));
   // async componentDidMount() {
   //   await this._askForCalendarPermissions();
   //   await this._askForReminderPermissions();
@@ -37,6 +43,12 @@ const App = () => {
       animated: true,
       barStyle: "dark-content",
     });
+    const user = await AsyncStorage.getItem("user");
+    console.log(user, "user from async");
+    if (user !== null) {
+      let parsedUser = JSON.parse(user);
+      setAuth({ role: parsedUser.role });
+    }
   }, []);
 
   const _askForCalendarPermissions = async () => {
@@ -68,9 +80,11 @@ const App = () => {
     <SafeAreaProvider style={{ backgroundColor: "#2196f3" }}>
       <AppWrapper>
         {/* <BottomNav /> */}
-        {/* {console.log(isAuth, "isAuth")} */}
-        {/* <AuthStack /> */}
-        {isAuth && <BottomNav />}
+        {console.log(role, "role")}
+
+        {isAuth && role != "admin" && <ClientStack />}
+        {isAuth && role == "admin" && <BottomNav />}
+
         {!isAuth && <AuthStack />}
       </AppWrapper>
     </SafeAreaProvider>

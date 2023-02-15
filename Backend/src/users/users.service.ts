@@ -4,12 +4,17 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Any, Not, Repository } from 'typeorm';
 import { CreateCodeDto } from './dto/create-code.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 
+export enum UserRole {
+  admin = 'admin',
+  seller = 'seller',
+  buyer = 'buyer',
+}
 @Injectable()
 export class UsersService {
   constructor(@InjectRepository(User) private repo: Repository<User>) {}
@@ -33,8 +38,12 @@ export class UsersService {
     const user = this.repo.create(CreateCodeDto);
     return this.repo.save(user);
   }
-  async findAll() {
-    const users = await this.repo.find({});
+
+  async findAll(userRole: string) {
+    const users = await this.repo.find({
+      where: { role: Not(UserRole.admin) },
+      relations: { Docs: true },
+    });
 
     return users;
   }
@@ -44,7 +53,9 @@ export class UsersService {
     if (!id) {
       throw new UnauthorizedException('unAuthorized');
     }
-    const user = await this.repo.findOne({ where: { id },      relations: { Docs: true },
+    const user = await this.repo.findOne({
+      where: { id },
+      relations: { Docs: true },
     });
     if (!user) {
       throw new NotFoundException('user not found5');

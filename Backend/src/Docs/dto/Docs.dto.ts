@@ -41,10 +41,16 @@ export class DocsDto {
   @Expose()
   id: number;
   @Expose()
-  training: string;
+  type: string;
 
-  //   obj.name_en ? obj.name_en : obj.name_ar
-  @Transform(({ obj }) => obj.user)
   @Expose()
-  user: User;
+  doc: string;
+
+  @Expose()
+  extra: string;
+
+  // //   obj.name_en ? obj.name_en : obj.name_ar
+  // @Transform(({ obj }) => obj.user)
+  // @Expose()
+  // user: User;
 }

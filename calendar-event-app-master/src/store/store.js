@@ -1,6 +1,7 @@
 import create from "zustand";
 import produce from "immer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 // Turn the set method into an immer proxy
 const immer = (config) => (set, get, api) =>
   config(
@@ -15,18 +16,101 @@ const immer = (config) => (set, get, api) =>
 const zustandCreateStore = (children) => create(immer(children));
 
 const storeStates = {
+  admin: null,
   todo: [],
   isAuth: false,
+  role: "test",
+  error: null,
+  errorForSignUp: null,
+  allusers: [],
 };
 
 const storeMethods = (set, get) => ({
-  setLogin: () => {
-    set({ isAuth: true });
+  setAuth: async (data) => {
+    set({ isAuth: true, role: data.role });
+  },
+  setLogin: async (data) => {
+    console.log(data);
+
+    try {
+      const res = await axios.post(
+        "http://192.168.1.2:5001/users/signin",
+        data,
+      );
+
+      console.log(res.data, "res");
+      set({ isAuth: true, role: res.data.role });
+      await AsyncStorage.setItem(
+        "user",
+        JSON.stringify({ ...res.data, isAuth: true }),
+      );
+    } catch (error) {
+      console.log(error);
+      set({ error: error.response.data.message });
+    }
+  },
+
+  setErrorForSignupEmpty: async () => {
+    set({ errorForSignUp: null });
+  },
+  setSignUp: async (data) => {
+    console.log(data);
+
+    try {
+      const res = await axios.post(
+        "http://192.168.1.2:5001/users/signup",
+        data,
+      );
+
+      console.log(res.data, "res");
+      set({ isAuth: true, role: res.data.role });
+      await AsyncStorage.setItem(
+        "user",
+        JSON.stringify({ ...res.data, isAuth: true }),
+      );
+    } catch (error) {
+      console.log(error.response.data);
+      set({ errorForSignUp: error.response.data.message });
+    }
+  },
+
+  setUploadDoc: async (data) => {
+    console.log(data.doc, "doc");
+
+    try {
+      axios.post("http://192.168.1.2:5001/docs/create", data);
+      const res = await axios({
+        method: "post",
+        url: "http://192.168.1.2:5001/docs/create",
+        data: data,
+      });
+
+      console.log(res.data, "res create");
+
+      // set({ isAuth: true, role: res.data.role });
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  },
+  getAllUsers: async (data) => {
+    try {
+      const res = await axios.get("http://192.168.1.2:5001/users");
+
+      console.log(res.data, "res");
+      set({ allusers: res.data });
+    } catch (error) {
+      console.log(error.response.data);
+      // set({ error: error.response.data.message });
+    }
   },
   init: async () => {
     try {
       // await AsyncStorage.clear();
       const todo = await AsyncStorage.getItem("TODO");
+      const admin = await AsyncStorage.getItem("user");
+      if (admin !== null) {
+        set({ admin: JSON.parse(admin) });
+      }
       if (todo !== null) {
         set({ todo: JSON.parse(todo) });
       }
