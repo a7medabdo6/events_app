@@ -37,7 +37,7 @@ import { Meeting } from './meeting/entities/meeting.entity';
       type: 'mysql',
       host: 'localhost',
       port: 3306,
-      username: 'root2',
+      username: 'root',
       password: '',
       database: 'events',
       entities: [User, Docs, ServiceUser, Meeting],

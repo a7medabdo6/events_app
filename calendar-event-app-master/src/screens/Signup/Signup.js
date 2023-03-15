@@ -165,7 +165,7 @@ const Signup = (props) => {
               <Btn
                 textColor="white"
                 bgColor={darkGreen}
-                btnLabel="Signup"
+                btnLabel="Sign Up"
                 Press={() => {
                   if (password != ConfirmPass) {
                     setErrorForSignupEmpty();
@@ -202,7 +202,7 @@ const Signup = (props) => {
                 <Text
                   style={{ color: darkGreen, fontWeight: "bold", fontSize: 16 }}
                 >
-                  Login
+                  Log In
                 </Text>
               </TouchableOpacity>
             </View>

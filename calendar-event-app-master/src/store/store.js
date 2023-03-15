@@ -23,6 +23,9 @@ const storeStates = {
   error: null,
   errorForSignUp: null,
   allusers: [],
+  meetings: [],
+  IsCreateMeetingTrue: false,
+  user: null,
 };
 
 const storeMethods = (set, get) => ({
@@ -30,22 +33,23 @@ const storeMethods = (set, get) => ({
     set({ isAuth: true, role: data.role });
   },
   setLogin: async (data) => {
-    console.log(data);
+    // console.log(data);
 
     try {
       const res = await axios.post(
-        "http://192.168.1.2:5001/users/signin",
+        "http://192.168.169.248:5001/users/signin",
         data,
       );
 
-      console.log(res.data, "res");
+      // console.log(res.data, "res");
       set({ isAuth: true, role: res.data.role });
+      set({ user: res.data });
       await AsyncStorage.setItem(
         "user",
         JSON.stringify({ ...res.data, isAuth: true }),
       );
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       set({ error: error.response.data.message });
     }
   },
@@ -54,52 +58,104 @@ const storeMethods = (set, get) => ({
     set({ errorForSignUp: null });
   },
   setSignUp: async (data) => {
-    console.log(data);
+    // console.log(data);
 
     try {
       const res = await axios.post(
-        "http://192.168.1.2:5001/users/signup",
+        "http://192.168.169.248:5001/users/signup",
         data,
       );
 
-      console.log(res.data, "res");
+      // console.log(res.data, "res");
       set({ isAuth: true, role: res.data.role });
       await AsyncStorage.setItem(
         "user",
         JSON.stringify({ ...res.data, isAuth: true }),
       );
     } catch (error) {
-      console.log(error.response.data);
+      // console.log(error.response.data);
       set({ errorForSignUp: error.response.data.message });
     }
   },
 
   setUploadDoc: async (data) => {
-    console.log(data.doc, "doc");
+    // console.log(data.doc, "doc");
 
     try {
-      axios.post("http://192.168.1.2:5001/docs/create", data);
+      axios.post("http://192.168.169.248:5001/docs/create", data);
       const res = await axios({
         method: "post",
-        url: "http://192.168.1.2:5001/docs/create",
+        url: "http://192.168.169.248:5001/docs/create",
         data: data,
       });
 
-      console.log(res.data, "res create");
+      // console.log(res.data, "res create");
 
       // set({ isAuth: true, role: res.data.role });
     } catch (error) {
-      console.log(error.response.data);
+      // console.log(error.response.data);
     }
   },
   getAllUsers: async (data) => {
     try {
-      const res = await axios.get("http://192.168.1.2:5001/users");
+      const res = await axios.get("http://192.168.169.248:5001/users");
 
       console.log(res.data, "res");
       set({ allusers: res.data });
     } catch (error) {
+      // console.log(error.response.data);
+      // set({ error: error.response.data.message });
+    }
+  },
+  createMeeting: async (data) => {
+    // console.log(data, "data");
+    try {
+      const res = await axios.post(
+        "http://192.168.169.248:5001/meeting/create",
+        data,
+      );
+
+      console.log(res.data, "res create");
+      set({ IsCreateMeetingTrue: true });
+      setTimeout(() => {
+        set({ IsCreateMeetingTrue: false });
+      }, 200);
+    } catch (error) {
       console.log(error.response.data);
+      // set({ error: error.response.data.message });
+    }
+  },
+  EditMeeting: async (data) => {
+    console.log(
+      data,
+      "dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    );
+    try {
+      const res = await axios.patch(
+        `http://192.168.169.248:5001/meeting/${data.id}`,
+        data,
+      );
+
+      console.log(res.data, "res edit");
+      set({ IsCreateMeetingTrue: true });
+      setTimeout(() => {
+        set({ IsCreateMeetingTrue: false });
+      }, 200);
+    } catch (error) {
+      console.log(error.response.data);
+      // set({ error: error.response.data.message });
+    }
+  },
+  getAllMeeting: async (data) => {
+    try {
+      const res = await axios.get(
+        `http://192.168.169.248:5001/meeting?ClientId=${data.id}`,
+      );
+
+      // console.log(res.data, "res");
+      set({ meetings: res.data });
+    } catch (error) {
+      // console.log(error.response.data);
       // set({ error: error.response.data.message });
     }
   },

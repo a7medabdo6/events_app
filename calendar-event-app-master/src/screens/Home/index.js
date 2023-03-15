@@ -15,13 +15,16 @@ import {
 import moment from "moment";
 import * as Calendar from "expo-calendar";
 import * as Localization from "expo-localization";
-
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import CalendarStrip from "react-native-calendar-strip";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { Task } from "@calendar/components";
 import { useStore } from "@calendar/store";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from "@react-navigation/native";
+import DropDownPicker from "react-native-dropdown-picker";
 
 const styles = StyleSheet.create({
   taskListContent: {
@@ -153,21 +156,98 @@ const datesWhitelist = [
 ];
 
 export default function Home({ navigation }) {
-  const { updateSelectedTask, deleteSelectedTask, todo, role } = useStore(
-    (state) => ({
-      updateSelectedTask: state.updateSelectedTask,
-      deleteSelectedTask: state.deleteSelectedTask,
-      todo: state.todo,
-      role: state.role,
-    }),
-  );
+  const {
+    updateSelectedTask,
+    deleteSelectedTask,
+    todo,
+    role,
+    getAllMeeting,
+    meetings,
+    IsCreateMeetingTrue,
+    allusers,
+    getAllUsers,
+    EditMeeting,
+    userstate,
+  } = useStore((state) => ({
+    updateSelectedTask: state.updateSelectedTask,
+    deleteSelectedTask: state.deleteSelectedTask,
+    todo: state.todo,
+    role: state.role,
+    getAllMeeting: state.getAllMeeting,
+    meetings: state.meetings,
+    IsCreateMeetingTrue: state.IsCreateMeetingTrue,
+    allusers: state.allusers,
+    getAllUsers: state.getAllUsers,
+    EditMeeting: state.EditMeeting,
+    userstate: state.user,
+  }));
   useEffect(() => {
-    console.log(role, "role");
-    AsyncStorage.removeItem("user");
-    return () => {};
-  }, [role]);
+    getAllUsers();
 
-  const [todoList, setTodoList] = useState([]);
+    return () => {};
+  }, [isFocused]);
+  const [user, setUser] = useState(null);
+  // useEffect(() => {
+  //   console.log(role, "role");
+  //   AsyncStorage.removeItem("user");
+  //   return () => {};
+  // }, [role]);
+  const getuser = async () => {
+    const user = await AsyncStorage.getItem("user");
+    // console.log(user, "userrrrrrrrrrrrrr");
+    setUser(JSON.parse(user));
+  };
+  useEffect(() => {
+    getuser();
+
+    return () => {};
+  }, []);
+  useEffect(() => {
+    // console.log(meetings, "meetingggggggggggggggggggggggggggggggg");
+    setCurrentTodoList((old) =>
+      meetings?.filter((item) => item.alarm_time == currentDate),
+    );
+    return () => {};
+  }, [meetings]);
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    getAllMeeting({ id: userstate ? userstate?.id : user?.id });
+
+    return () => {};
+  }, [user, isFocused, IsCreateMeetingTrue, currentDate]);
+
+  const [CurrentTodoList, setCurrentTodoList] = useState([]);
+  const [todoList, setTodoList] = useState([
+    {
+      title: "test 1",
+      alarm_time: "2023-02-26",
+      notes: "note 1",
+      user: "user 1",
+      color: "red",
+    },
+    {
+      title: "test 2",
+      alarm_time: "2023-02-26",
+      notes: "note 2",
+      user: "user 2",
+      color: "red",
+    },
+    {
+      title: "test 3",
+      alarm_time: "26/02/2023",
+      notes: "note 3",
+      user: "user 3",
+      color: "red",
+    },
+    {
+      title: "test 2",
+      alarm_time: "2023-02-26",
+      notes: "note 2",
+      user: "user 2",
+      color: "red",
+    },
+  ]);
   const [markedDate, setMarkedDate] = useState([]);
   const [currentDate, setCurrentDate] = useState(
     `${moment().format("YYYY")}-${moment().format("MM")}-${moment().format(
@@ -177,11 +257,44 @@ export default function Home({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [isDateTimePickerVisible, setDateTimePickerVisible] = useState(false);
+  const [taskText, setTaskText] = useState("selectedTask?.title");
+  const [notesText, setNotesText] = useState("");
+  const [client, setClient] = useState(null);
+  const [alarm_time, setalarm_time] = useState("");
+  const [color, setcolor] = useState("");
+  const [alarm_status, setalarm_status] = useState("");
+  const [Items, setItems] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  useEffect(() => {
+    setTaskText(selectedTask?.title);
+    setNotesText(selectedTask?.notes);
+    setcolor(selectedTask?.color);
+    setalarm_time(selectedTask?.alarm_time);
+    setalarm_status(selectedTask?.alarm_status);
+    setValue(selectedTask?.user.id);
 
+    return () => {};
+  }, [selectedTask]);
+  useEffect(() => {
+    if (allusers.length > 0) {
+      let item = [];
+      for (let index = 0; index < allusers.length; index++) {
+        item.push({
+          label: allusers[index].username,
+          value: allusers[index].id,
+        });
+      }
+      setItems(item);
+    }
+  }, [allusers]);
   useEffect(() => {
     handleDeletePreviousDayTask(todo);
-    console.log(todo, "toda");
-  }, [todo, currentDate]);
+    // console.log(todo, currentDate, "toda");
+    setCurrentTodoList((old) =>
+      meetings?.filter((item) => item.alarm_time == currentDate),
+    );
+  }, [todo, currentDate, isFocused, IsCreateMeetingTrue]);
 
   const handleDeletePreviousDayTask = async (oldTodo) => {
     try {
@@ -200,7 +313,7 @@ export default function Home({ navigation }) {
                   listValue.alarm.createEventAsyncRes.toString(),
                 );
               } catch (error) {
-                console.log(error);
+                // console.log(error);
               }
             });
             return false;
@@ -222,6 +335,15 @@ export default function Home({ navigation }) {
 
   const updateCurrentTask = async (currentDate) => {
     try {
+      // console.log(currentDate);
+      getAllMeeting({ id: userstate ? userstate?.id : user?.id });
+      // console.log(meetings);
+
+      // console.log(meetings?.filter((item) => item.alarm_time == currentDate));
+      setCurrentTodoList((old) =>
+        meetings?.filter((item) => item.alarm_time == currentDate),
+      );
+
       if (todo !== [] && todo) {
         const markDot = todo.map((item) => item.markedDot);
         const todoLists = todo.filter((item) => {
@@ -230,15 +352,10 @@ export default function Home({ navigation }) {
           }
           return false;
         });
-        setMarkedDate(markDot);
-        if (todoLists.length !== 0) {
-          setTodoList(todoLists[0].todoList);
-        } else {
-          setTodoList([]);
-        }
+        // setMarkedDate(markDot);
       }
     } catch (error) {
-      console.log("updateCurrentTask", error.message);
+      // console.log("updateCurrentTask", error.message);
     }
   };
 
@@ -283,7 +400,7 @@ export default function Home({ navigation }) {
         updateTask.alarm.createEventAsyncRes = createEventAsyncRes;
         setSelectedTask(updateTask);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     } else {
       try {
@@ -292,7 +409,7 @@ export default function Home({ navigation }) {
           event,
         );
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
   };
@@ -308,7 +425,7 @@ export default function Home({ navigation }) {
       updateTask.alarm.createEventAsyncRes = "";
       setSelectedTask(updateTask);
     } catch (error) {
-      console.log("deleteAlarm", error.message);
+      // console.log("deleteAlarm", error.message);
     }
   };
 
@@ -319,7 +436,7 @@ export default function Home({ navigation }) {
           selectedTask?.alarm.createEventAsyncRes.toString(),
         );
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
   };
@@ -362,13 +479,21 @@ export default function Home({ navigation }) {
           borderBottomEndRadius: 30,
           borderBottomStartRadius: 30,
           display: "flex",
-          justifyContent: "center",
+          justifyContent: "space-around",
           alignItems: "center",
+          flexDirection: "row",
         }}
       >
         <Text style={{ color: "white", fontSize: 22, fontWeight: "bold" }}>
           Home
         </Text>
+        <TouchableOpacity
+          onPress={() => {
+            AsyncStorage.removeItem("user");
+          }}
+        >
+          <AntDesign name="logout" size={24} color={"white"} />
+        </TouchableOpacity>
       </View>
       {selectedTask !== null && (
         <Task {...{ setModalVisible, isModalVisible }}>
@@ -384,12 +509,12 @@ export default function Home({ navigation }) {
             <TextInput
               style={styles.title}
               onChangeText={(text) => {
-                let prevSelectedTask = JSON.parse(JSON.stringify(selectedTask));
-                prevSelectedTask.title = text;
-                setSelectedTask(prevSelectedTask);
+                setTaskText(text);
+                // let prevSelectedTask = JSON.parse(JSON.stringify(selectedTask));
+                // prevSelectedTask.title = text;
+                // setSelectedTask(prevSelectedTask);
               }}
-              value={selectedTask.title}
-              placeholder="What do you need to do?"
+              value={taskText}
             />
             <Text
               style={{
@@ -401,21 +526,27 @@ export default function Home({ navigation }) {
               Suggestion
             </Text>
             <View style={{ flexDirection: "row" }}>
-              <View style={styles.readBook}>
-                <Text style={{ textAlign: "center", fontSize: 14 }}>
-                  Read book
-                </Text>
-              </View>
               <View style={styles.design}>
                 <Text style={{ textAlign: "center", fontSize: 14 }}>
-                  Design
+                  Selling
                 </Text>
               </View>
               <View style={styles.learn}>
-                <Text style={{ textAlign: "center", fontSize: 14 }}>Learn</Text>
+                <Text style={{ textAlign: "center", fontSize: 14 }}>
+                  Buying
+                </Text>
               </View>
             </View>
             <View style={styles.notesContent} />
+            <DropDownPicker
+              open={open}
+              value={value}
+              items={Items}
+              setOpen={setOpen}
+              setValue={setValue}
+              setItems={setItems}
+              style={{ marginVertical: 10 }}
+            />
             <View>
               <Text
                 style={{
@@ -432,19 +563,13 @@ export default function Home({ navigation }) {
                   fontSize: 19,
                   marginTop: 3,
                 }}
-                onChangeText={(text) => {
-                  let prevSelectedTask = JSON.parse(
-                    JSON.stringify(selectedTask),
-                  );
-                  prevSelectedTask.notes = text;
-                  setSelectedTask(prevSelectedTask);
-                }}
-                value={selectedTask.notes}
-                placeholder="Enter notes about the task."
+                onChangeText={setNotesText}
+                value={notesText}
+                placeholder="Enter notes about the Appointment."
               />
             </View>
             <View style={styles.separator} />
-            <View>
+            {/* <View>
               <Text
                 style={{
                   color: "#9CAAC4",
@@ -467,8 +592,8 @@ export default function Home({ navigation }) {
                   )}
                 </Text>
               </TouchableOpacity>
-            </View>
-            <View style={styles.separator} />
+            </View> */}
+            {/* <View style={styles.separator} />
             <View
               style={{
                 flexDirection: "row",
@@ -503,7 +628,7 @@ export default function Home({ navigation }) {
                 value={selectedTask?.alarm?.isOn || false}
                 onValueChange={handleAlarmSet}
               />
-            </View>
+            </View> */}
             <View
               style={{
                 flexDirection: "row",
@@ -514,15 +639,24 @@ export default function Home({ navigation }) {
               <TouchableOpacity
                 onPress={async () => {
                   handleModalVisible();
-                  console.log("isOn", selectedTask?.alarm.isOn);
-                  if (selectedTask?.alarm.isOn) {
-                    await updateAlarm();
-                  } else {
-                    await deleteAlarm();
-                  }
-                  await updateSelectedTask({
-                    date: currentDate,
-                    todo: selectedTask,
+                  // console.log("isOn", selectedTask?.alarm.isOn);
+                  // if (selectedTask?.alarm.isOn) {
+                  //   await updateAlarm();
+                  // } else {
+                  //   await deleteAlarm();
+                  // }
+                  // await updateSelectedTask({
+                  //   date: currentDate,
+                  //   todo: selectedTask,
+                  // });
+                  console.log(
+                    "dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  );
+                  EditMeeting({
+                    title: taskText,
+                    notes: notesText,
+                    user: value,
+                    id: selectedTask?.id,
                   });
                   updateCurrentTask(currentDate);
                 }}
@@ -642,10 +776,10 @@ export default function Home({ navigation }) {
         >
           <ScrollView
             contentContainerStyle={{
-              paddingBottom: 20,
+              paddingBottom: 80,
             }}
           >
-            {todoList.map((item) => (
+            {CurrentTodoList?.map((item) => (
               <TouchableOpacity
                 onPress={() => {
                   setSelectedTask(item);
@@ -698,11 +832,9 @@ export default function Home({ navigation }) {
                           fontSize: 14,
                           marginRight: 5,
                         }}
-                      >{`${moment(item.alarm.time).format("YYYY")}/${moment(
-                        item.alarm.time,
-                      ).format("MM")}/${moment(item.alarm.time).format(
-                        "DD",
-                      )}`}</Text>
+                      >
+                        {item.alarm_time}
+                      </Text>
                       <Text
                         style={{
                           color: "#BBBBBB",
@@ -713,11 +845,15 @@ export default function Home({ navigation }) {
                       </Text>
                       <Text
                         style={{
-                          color: "#BBBBBB",
+                          color: "white",
                           fontSize: 14,
+                          backgroundColor: item.color,
+                          marginHorizontal: 15,
+                          paddingHorizontal: 15,
+                          borderRadius: 10,
                         }}
                       >
-                        {item?.client}
+                        {item?.user?.username}
                       </Text>
                     </View>
                   </View>

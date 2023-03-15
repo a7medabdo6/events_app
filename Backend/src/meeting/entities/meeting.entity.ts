@@ -21,6 +21,8 @@ export class Meeting {
   @Column()
   alarm_time: string;
   @Column()
+  color: string;
+  @Column()
   alarm_status: boolean;
   @ManyToOne(() => User, (user) => user.meetings) // specify inverse side as a second parameter
   user: User;

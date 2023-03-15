@@ -17,6 +17,7 @@ import {
 import moment from "moment";
 import * as Calendar from "expo-calendar";
 import * as Localization from "expo-localization";
+import DropDownPicker from "react-native-dropdown-picker";
 
 import CalendarStrip from "react-native-calendar-strip";
 import DateTimePicker from "react-native-modal-datetime-picker";
@@ -149,13 +150,24 @@ const styles = StyleSheet.create({
 });
 
 export default function Home({ user }) {
-  const [todoList, setTodoList] = useState([
-    "review",
-    "servuy",
-    "submit",
-    "check",
-    "payment",
+  const [todoListForCash, setTodoListForCash] = useState([
+    "Executed Contract",
+    "Escrow Receipt",
+    "Inspection Period",
+    "Closing",
   ]);
+  const [todoListForFinancing, setTodoListForFinancing] = useState([
+    "Financing",
+    "Financing Receipt",
+    "Financing Period",
+    "Financing Closing",
+  ]);
+  const [Items, setItems] = useState([
+    { label: "Cash", value: "Cash" },
+    { label: "Financing", value: "Financing" },
+  ]);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
   const navigation = useNavigation();
   return (
     <Fragment>
@@ -176,29 +188,48 @@ export default function Home({ user }) {
               paddingBottom: 20,
             }}
           >
-            {todoList.map((item) => (
-              <TouchableOpacity
-                key={1}
-                onPress={() =>
-                  user?.Docs?.filter((docitem) => docitem.type == item)
-                    ?.length > 0
-                    ? null
-                    : navigation.push("upload", { item, user })
-                }
-                style={styles.taskListContent}
-              >
-                <View
-                  style={{
-                    marginLeft: 13,
-                  }}
+            <View
+              style={{ marginVertical: 10, width: "85%", alignSelf: "center" }}
+            >
+              <DropDownPicker
+                open={open}
+                value={value}
+                items={Items}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={setItems}
+                style={{
+                  marginVertical: 10,
+                  width: "100%",
+                  alignSelf: "center",
+                }}
+              />
+            </View>
+
+            {value == "Cash" &&
+              todoListForCash.map((item) => (
+                <TouchableOpacity
+                  key={1}
+                  onPress={() =>
+                    user?.Docs?.filter((docitem) => docitem.type == item)
+                      ?.length > 0
+                      ? null
+                      : navigation.push("upload", { item, user })
+                  }
+                  style={styles.taskListContent}
                 >
                   <View
                     style={{
-                      flexDirection: "row",
-                      alignItems: "center",
+                      marginLeft: 13,
                     }}
                   >
-                    {/* <View
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      {/* <View
                       style={{
                         height: 12,
                         width: 12,
@@ -207,66 +238,158 @@ export default function Home({ user }) {
                         marginRight: 8,
                       }}
                     /> */}
-                    {/* <Checkbox /> */}
-                    <AntDesign
-                      name="checkcircleo"
-                      size={24}
-                      // color="#2196f3"
-                      color={
-                        user?.Docs?.filter((docitem) => docitem.type == item)
-                          ?.length > 0
-                          ? "#2196f3"
-                          : "grey"
-                      }
-                      style={{ marginRight: 8 }}
-                    />
-                    <Text
-                      style={{
-                        color: "#554A4C",
-                        fontSize: 20,
-                        fontWeight: "700",
-                      }}
-                    >
-                      {item}
-                    </Text>
+                      {/* <Checkbox /> */}
+                      <AntDesign
+                        name="checkcircleo"
+                        size={24}
+                        // color="#2196f3"
+                        color={
+                          user?.Docs?.filter((docitem) => docitem.type == item)
+                            ?.length > 0
+                            ? "#2196f3"
+                            : "grey"
+                        }
+                        style={{ marginRight: 8 }}
+                      />
+                      <Text
+                        style={{
+                          color: "#554A4C",
+                          fontSize: 20,
+                          fontWeight: "700",
+                        }}
+                      >
+                        {item}
+                      </Text>
+                    </View>
+                    <View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          marginLeft: 20,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: "#BBBBBB",
+                            fontSize: 14,
+                            marginRight: 5,
+                          }}
+                        >
+                          01/01/2023
+                        </Text>
+                        <Text
+                          style={{
+                            color: "#BBBBBB",
+                            fontSize: 14,
+                          }}
+                        >
+                          {"this is first survey for john"}
+                        </Text>
+                      </View>
+                    </View>
                   </View>
-                  <View>
+                  <View
+                    style={{
+                      height: 80,
+                      width: 5,
+                      backgroundColor: "red",
+                      borderRadius: 5,
+                    }}
+                  />
+                </TouchableOpacity>
+              ))}
+            {value == "Financing" &&
+              todoListForFinancing.map((item) => (
+                <TouchableOpacity
+                  key={1}
+                  onPress={() =>
+                    user?.Docs?.filter((docitem) => docitem.type == item)
+                      ?.length > 0
+                      ? null
+                      : navigation.push("upload", { item, user })
+                  }
+                  style={styles.taskListContent}
+                >
+                  <View
+                    style={{
+                      marginLeft: 13,
+                    }}
+                  >
                     <View
                       style={{
                         flexDirection: "row",
-                        marginLeft: 20,
+                        alignItems: "center",
                       }}
                     >
+                      {/* <View
+                      style={{
+                        height: 12,
+                        width: 12,
+                        borderRadius: 6,
+                        backgroundColor: "#2196f3",
+                        marginRight: 8,
+                      }}
+                    /> */}
+                      {/* <Checkbox /> */}
+                      <AntDesign
+                        name="checkcircleo"
+                        size={24}
+                        // color="#2196f3"
+                        color={
+                          user?.Docs?.filter((docitem) => docitem.type == item)
+                            ?.length > 0
+                            ? "#2196f3"
+                            : "grey"
+                        }
+                        style={{ marginRight: 8 }}
+                      />
                       <Text
                         style={{
-                          color: "#BBBBBB",
-                          fontSize: 14,
-                          marginRight: 5,
+                          color: "#554A4C",
+                          fontSize: 20,
+                          fontWeight: "700",
                         }}
                       >
-                        01/01/2023
-                      </Text>
-                      <Text
-                        style={{
-                          color: "#BBBBBB",
-                          fontSize: 14,
-                        }}
-                      >
-                        {"this is first survey for john"}
+                        {item}
                       </Text>
                     </View>
+                    <View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          marginLeft: 20,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: "#BBBBBB",
+                            fontSize: 14,
+                            marginRight: 5,
+                          }}
+                        >
+                          01/01/2023
+                        </Text>
+                        <Text
+                          style={{
+                            color: "#BBBBBB",
+                            fontSize: 14,
+                          }}
+                        >
+                          {"this is first survey for john"}
+                        </Text>
+                      </View>
+                    </View>
                   </View>
-                </View>
-                <View
-                  style={{
-                    height: 80,
-                    width: 5,
-                    backgroundColor: "red",
-                    borderRadius: 5,
-                  }}
-                />
-              </TouchableOpacity>
-            ))}
+                  <View
+                    style={{
+                      height: 80,
+                      width: 5,
+                      backgroundColor: "red",
+                      borderRadius: 5,
+                    }}
+                  />
+                </TouchableOpacity>
+              ))}
           </ScrollView>
         </View>
       </SafeAreaView>

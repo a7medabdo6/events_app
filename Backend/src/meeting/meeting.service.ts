@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common/exceptions';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
@@ -22,11 +23,19 @@ export class MeetingService {
 
   async findAll(ClientId: number) {
     const Client = await this.usersService.findOne(ClientId);
+    if (Client.role == 'admin') {
+      const meeting = await this.repo.find({
+        relations: { user: true },
+      });
+
+      return meeting;
+    }
     const meeting = await this.repo.find({
       where: { user: Client },
+      relations: { user: true },
     });
 
-    return Client;
+    return meeting;
   }
 
   async findOne(id: number) {
@@ -37,8 +46,13 @@ export class MeetingService {
     return meeting;
   }
 
-  update(id: number, updateMeetingDto: UpdateMeetingDto) {
-    return `This action updates a #${id} meeting`;
+  async update(id: number, updateMeetingDto: UpdateMeetingDto) {
+    const meeting = await this.findOne(id);
+    if (!meeting) {
+      throw new NotFoundException('meeting not found');
+    }
+    Object.assign(meeting, updateMeetingDto);
+    return this.repo.save(meeting);
   }
 
   remove(id: number) {

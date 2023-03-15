@@ -13,6 +13,8 @@ import {
 } from "react-native";
 import { CalendarList } from "react-native-calendars";
 import moment from "moment";
+import DropDownPicker from "react-native-dropdown-picker";
+
 import * as Calendar from "expo-calendar";
 import * as Localization from "expo-localization";
 import DateTimePicker from "react-native-modal-datetime-picker";
@@ -21,6 +23,7 @@ import { useKeyboardHeight } from "@calendar/hooks";
 import { useStore } from "@calendar/store";
 import { Routes } from "@calendar/navigation";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useIsFocused } from "@react-navigation/native";
 
 const { width: vw } = Dimensions.get("window");
 // moment().format('YYYY/MM/DD')
@@ -84,7 +87,7 @@ const styles = StyleSheet.create({
     fontSize: 19,
   },
   taskContainer: {
-    height: 400,
+    height: 500,
     width: 327,
     alignSelf: "center",
     borderRadius: 20,
@@ -125,8 +128,9 @@ const styles = StyleSheet.create({
 });
 
 export default function CreateTask({ navigation, route }) {
-  const { updateTodo } = useStore((state) => ({
+  const { updateTodo, createMeeting } = useStore((state) => ({
     updateTodo: state.updateTodo,
+    createMeeting: state.createMeeting,
   }));
 
   const keyboardHeight = useKeyboardHeight();
@@ -146,15 +150,48 @@ export default function CreateTask({ navigation, route }) {
   const [currentDay, setCurrentDay] = useState(moment().format());
   const [taskText, setTaskText] = useState("");
   const [notesText, setNotesText] = useState("");
-  const [client, setClient] = useState("client A");
-
+  const [client, setClient] = useState(null);
+  const [alarm_time, setalarm_time] = useState("");
+  const [color, setcolor] = useState("");
+  const [alarm_status, setalarm_status] = useState("");
+  const [Items, setItems] = useState([]);
+  const isFocused = useIsFocused();
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  //
   const [visibleHeight, setVisibleHeight] = useState(
     Dimensions.get("window").height,
   );
   const [isAlarmSet, setAlarmSet] = useState(false);
-  const [alarmTime, setAlarmTime] = useState(moment().format());
+  const [alarmTime, setAlarmTime] = useState(moment().format("YYYY-MM-DD"));
   const [isDateTimePickerVisible, setDateTimePickerVisible] = useState(false);
+  const { getAllUsers, allusers } = useStore((state) => ({
+    getAllUsers: state.getAllUsers,
+    allusers: state.allusers,
+  }));
+  useEffect(() => {
+    getAllUsers();
 
+    return () => {};
+  }, [isFocused]);
+  // useEffect(() => {
+  //   console.log(
+  //     Items,
+  //     "alluserssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",
+  //   );
+  // }, [allusers]);
+  useEffect(() => {
+    if (allusers.length > 0) {
+      let item = [];
+      for (let index = 0; index < allusers.length; index++) {
+        item.push({
+          label: allusers[index].username,
+          value: allusers[index].id,
+        });
+      }
+      setItems(item);
+    }
+  }, [allusers]);
   useEffect(() => {
     if (keyboardHeight > 0) {
       setVisibleHeight(Dimensions.get("window").height - keyboardHeight);
@@ -202,51 +239,64 @@ export default function CreateTask({ navigation, route }) {
   const hideDateTimePicker = () => setDateTimePickerVisible(false);
 
   const handleCreateEventData = async (createEventId) => {
-    const creatTodo = {
-      key: uuidv4(),
-      date: `${moment(currentDay).format("YYYY")}-${moment(currentDay).format(
-        "MM",
-      )}-${moment(currentDay).format("DD")}`,
-      todoList: [
-        {
-          key: uuidv4(),
-          title: taskText,
-          notes: notesText,
-          client,
-          alarm: {
-            time: alarmTime,
-            isOn: isAlarmSet,
-            createEventAsyncRes: createEventId,
-          },
-          color: `rgb(${Math.floor(
-            Math.random() * Math.floor(256),
-          )},${Math.floor(Math.random() * Math.floor(256))},${Math.floor(
-            Math.random() * Math.floor(256),
-          )})`,
-        },
-      ],
-      markedDot: {
-        date: currentDay,
-        dots: [
-          {
-            key: uuidv4(),
-            color: "#2196f3",
-            selectedDotColor: "#2196f3",
-          },
-        ],
-      },
-    };
+    createMeeting({
+      title: taskText,
+      notes: notesText,
+      alarm_status: alarm_status,
+      alarm_time: alarmTime,
+      user: value,
+      color: `rgb(${Math.floor(Math.random() * Math.floor(256))},${Math.floor(
+        Math.random() * Math.floor(256),
+      )},${Math.floor(Math.random() * Math.floor(256))})`,
+    });
+    // const creatTodo = {
+    //   key: uuidv4(),
+    //   date: `${moment(currentDay).format("YYYY")}-${moment(currentDay).format(
+    //     "MM",
+    //   )}-${moment(currentDay).format("DD")}`,
+    //   todoList: [
+    //     {
+    //       key: uuidv4(),
+    //       title: taskText,
+    //       notes: notesText,
+    //       client,
+    //       alarm: {
+    //         time: alarmTime,
+    //         isOn: isAlarmSet,
+    //         createEventAsyncRes: createEventId,
+    //       },
+    //       color: `rgb(${Math.floor(
+    //         Math.random() * Math.floor(256),
+    //       )},${Math.floor(Math.random() * Math.floor(256))},${Math.floor(
+    //         Math.random() * Math.floor(256),
+    //       )})`,
+    //     },
+    //   ],
+    //   markedDot: {
+    //     date: currentDay,
+    //     dots: [
+    //       {
+    //         key: uuidv4(),
+    //         color: "#2196f3",
+    //         selectedDotColor: "#2196f3",
+    //       },
+    //     ],
+    //   },
+    // };
     navigation.navigate(Routes.HOME);
     await updateTodo(creatTodo);
     updateCurrentTask(currentDate);
   };
 
   const handleDatePicked = (date) => {
+    console.log(date, "date");
+
     const selectedDatePicked = currentDay;
     const hour = moment(date).hour();
     const minute = moment(date).minute();
     const newModifiedDay = moment(selectedDatePicked).hour(hour).minute(minute);
-    setAlarmTime(newModifiedDay);
+    const Date = moment(date).format("YYYY-MM-DD");
+    setAlarmTime(Date);
     hideDateTimePicker();
   };
 
@@ -264,7 +314,7 @@ export default function CreateTask({ navigation, route }) {
       <SafeAreaView style={styles.container}>
         <View
           style={{
-            height: visibleHeight,
+            height: "100%",
           }}
         >
           <ScrollView
@@ -327,7 +377,7 @@ export default function CreateTask({ navigation, route }) {
                 style={styles.title}
                 onChangeText={setTaskText}
                 value={taskText}
-                placeholder="Create Meeting?"
+                placeholder="Create Appointment?"
               />
               <Text
                 style={{
@@ -339,14 +389,9 @@ export default function CreateTask({ navigation, route }) {
                 Suggestion
               </Text>
               <View style={{ flexDirection: "row" }}>
-                <View style={styles.readBook}>
-                  <Text style={{ textAlign: "center", fontSize: 14 }}>
-                    Rental
-                  </Text>
-                </View>
                 <View style={styles.design}>
                   <Text style={{ textAlign: "center", fontSize: 14 }}>
-                    Seller
+                    Selling
                   </Text>
                 </View>
                 <View style={styles.learn}>
@@ -356,6 +401,15 @@ export default function CreateTask({ navigation, route }) {
                 </View>
               </View>
               <View style={styles.notesContent} />
+              <DropDownPicker
+                open={open}
+                value={value}
+                items={Items}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={setItems}
+                style={{ marginVertical: 10 }}
+              />
               <View>
                 <Text style={styles.notes}>Notes</Text>
                 <TextInput
@@ -366,7 +420,7 @@ export default function CreateTask({ navigation, route }) {
                   }}
                   onChangeText={setNotesText}
                   value={notesText}
-                  placeholder="Enter notes about the Meeting."
+                  placeholder="Enter notes about the Appointment."
                 />
               </View>
               <View style={styles.separator} />

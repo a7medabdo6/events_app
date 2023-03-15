@@ -31,7 +31,7 @@ const Login = (props) => {
             marginVertical: 20,
           }}
         >
-          Login
+          Log In
         </Text>
         <View
           style={{
@@ -114,7 +114,7 @@ const Login = (props) => {
                 <Text
                   style={{ color: darkGreen, fontWeight: "bold", fontSize: 16 }}
                 >
-                  Signup
+                  Sign Up
                 </Text>
               </TouchableOpacity>
             </View>

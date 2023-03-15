@@ -8,7 +8,9 @@ export class CreateMeetingDto {
   @IsString()
   @IsOptional()
   notes: string;
-
+  @IsString()
+  @IsOptional()
+  color: string;
   @IsString()
   @IsOptional()
   alarm_status: boolean;
