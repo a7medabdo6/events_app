@@ -35,11 +35,18 @@ import { Meeting } from './meeting/entities/meeting.entity';
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'events',
+
+      host: 'db-mysql-fra1-00835-do-user-13515466-0.b.db.ondigitalocean.com',
+      port: 25060,
+      username: 'doadmin',
+      password: 'AVNS_f_8byhoNldd0WiFmg7A',
+      database: 'defaultdb',
+
+      // host: 'localhost',
+      // port: 3306,
+      // username: 'root',
+      // password: '',
+      // database: 'events',
       entities: [User, Docs, ServiceUser, Meeting],
       synchronize: true,
     }),
