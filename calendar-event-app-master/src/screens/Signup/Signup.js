@@ -179,6 +179,7 @@ const Signup = (props) => {
                     code: Code,
                     username: Username,
                     role,
+                    active: true,
                   });
                   // alert("Accoutn created");
                   // props.navigation.navigate("login");

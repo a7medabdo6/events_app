@@ -12,7 +12,7 @@ const Field = (props) => {
         color: "black",
         paddingHorizontal: 5,
 
-        width: 270,
+        width: "100%",
         backgroundColor: "rgb(220,220, 220)",
         marginVertical: 10,
         paddingVertical: 10,

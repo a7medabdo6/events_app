@@ -14,7 +14,10 @@ const ModalComponent = ({ modalVisible, setModalVisible }) => {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <CreateUser />
+          <CreateUser
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+          />
           {/* <Pressable
             style={[styles.button, styles.buttonClose]}
             onPress={() => setModalVisible(!modalVisible)}
@@ -30,8 +33,7 @@ const ModalComponent = ({ modalVisible, setModalVisible }) => {
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+
     marginTop: 22,
     height: "50%",
   },

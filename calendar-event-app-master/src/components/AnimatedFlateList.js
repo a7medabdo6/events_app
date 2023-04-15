@@ -68,7 +68,17 @@ const App = ({ users }) => {
             contentContainerStyle={{ padding: 20 }}
           />
           <View style={styles.wrapText}>
-            <Text style={styles.fontSize}>{item.username} </Text>
+            <Text style={styles.fontSize}>
+              {item.username}{" "}
+              <Text style={styles.fontSize}>
+                {item.active ? (
+                  <Text style={{ color: "green" }}> Active</Text>
+                ) : (
+                  <Text style={{ color: "red" }}> Not Active</Text>
+                )}{" "}
+              </Text>{" "}
+            </Text>
+
             <Text style={{ fontSize: 19, marginVertical: 3 }}>
               {item.email}
             </Text>

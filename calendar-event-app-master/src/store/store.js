@@ -33,7 +33,9 @@ const storeMethods = (set, get) => ({
   setAuth: async (data) => {
     set({ isAuth: true, role: data.role });
   },
-
+  setcreteUserEMpty: async () => {
+    set({ createuser: null });
+  },
   setCreateUser: async (data) => {
     console.log(data);
 
@@ -43,7 +45,7 @@ const storeMethods = (set, get) => ({
         data,
       );
 
-      // console.log(res.data, "res");
+      console.log(res.data, "res");
       set({ createuser: res.data });
     } catch (error) {
       // console.log(error);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Touchable, TouchableOpacity } from "react-native";
 import Background from "../../components/Background";
 import Btn from "../../components/Btn";
@@ -7,7 +7,7 @@ import Field from "../../components/Field";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import useStore from "../../store/store";
 import DropDownPicker from "react-native-dropdown-picker";
-const CreateUser = (props) => {
+const CreateUser = ({ setModalVisible, modalVisible }) => {
   const [email, setemail] = useState("");
   const [code, setcode] = useState("");
   const [type, settype] = useState("");
@@ -24,10 +24,24 @@ const CreateUser = (props) => {
   const isFocused = useIsFocused();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const { setCreateUser, error } = useStore((state) => ({
-    setCreateUser: state.setCreateUser,
-    error: state.error,
-  }));
+  const { setCreateUser, error, createUser, setcreteUserEMpty } = useStore(
+    (state) => ({
+      setCreateUser: state.setCreateUser,
+      error: state.error,
+      createUser: state.createuser,
+      setcreteUserEMpty: state.setcreteUserEMpty,
+    }),
+  );
+  useEffect(() => {
+    console.log(createUser, "createUser");
+    if (createUser) {
+      setModalVisible(false);
+      setTimeout(() => {
+        setcreteUserEMpty(null);
+      }, 1000);
+    }
+  }, [createUser]);
+
   return (
     <View
       style={{
