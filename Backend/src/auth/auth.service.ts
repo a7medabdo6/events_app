@@ -35,7 +35,7 @@ export class AuthService {
       const user = await this.usersService.create({
         ...createUserDto,
         password: result,
-        active:true
+        active: true,
       });
       return user;
     } else if (users && users.active) {

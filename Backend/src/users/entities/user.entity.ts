@@ -23,9 +23,13 @@ export class User {
   email: string;
   @Column()
   code: string;
-  @Column()
+  @Column({
+    default: '00000000',
+  })
   phone: string;
-  @Column()
+  @Column({
+    default: '00000000',
+  })
   photo: string;
 
   @Column({
@@ -34,10 +38,14 @@ export class User {
     default: UserRole.seller,
   })
   type: UserRole;
-  @Column()
+  @Column({
+    default: '00000000',
+  })
   password: string;
 
-  @Column()
+  @Column({
+    default: '00000000',
+  })
   username: string;
 
   @Column({
@@ -52,7 +60,9 @@ export class User {
   })
   active: boolean;
 
-  @Column()
+  @Column({
+    default: '0',
+  })
   createBy: number;
 
   @OneToMany(() => Docs, (Docs) => Docs.user) // specify inverse side as a second parameter
