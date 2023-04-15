@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Touchable, TouchableOpacity } from "react-native";
+import { View, Text, Touchable, TouchableOpacity, Share } from "react-native";
 import Background from "../../components/Background";
 import Btn from "../../components/Btn";
 import { darkGreen } from "../../components/Constants";
@@ -32,12 +32,26 @@ const CreateUser = ({ setModalVisible, modalVisible }) => {
       setcreteUserEMpty: state.setcreteUserEMpty,
     }),
   );
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: `Thank You For Take the First Step To Join Us,
+           Please use This Email And Code to Sign Up
+           ${email}- ${code}
+          
+          `,
+      });
+    } catch (error) {
+      Alert.alert(error.message);
+    }
+  };
   useEffect(() => {
     console.log(createUser, "createUser");
     if (createUser) {
       setModalVisible(false);
       setTimeout(() => {
         setcreteUserEMpty(null);
+        onShare();
       }, 1000);
     }
   }, [createUser]);
