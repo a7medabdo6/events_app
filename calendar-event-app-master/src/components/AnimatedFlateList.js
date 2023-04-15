@@ -1,3 +1,4 @@
+import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
 import {
@@ -11,6 +12,7 @@ import {
   Animated,
   TouchableOpacity,
 } from "react-native";
+import ModalComponent from "./Modal";
 
 const marginBottomItem = 20;
 const paddingItem = 10;
@@ -93,6 +95,7 @@ const App = ({ users }) => {
       </TouchableOpacity>
     );
   };
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -105,13 +108,26 @@ const App = ({ users }) => {
           borderBottomEndRadius: 30,
           borderBottomStartRadius: 30,
           display: "flex",
-          justifyContent: "center",
+          justifyContent: "space-around",
           alignItems: "center",
+          flexDirection: "row",
         }}
       >
         <Text style={{ color: "white", fontSize: 22, fontWeight: "bold" }}>
           My Clients
         </Text>
+        <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+          <AntDesign
+            name="pluscircleo"
+            size={30}
+            color={"white"}
+            // style={focused && styles.active}
+          />
+        </TouchableOpacity>
+        <ModalComponent
+          setModalVisible={setModalVisible}
+          modalVisible={modalVisible}
+        />
       </View>
       {isLoading ? (
         <ActivityIndicator />

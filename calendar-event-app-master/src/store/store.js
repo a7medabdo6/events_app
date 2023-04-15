@@ -26,18 +26,36 @@ const storeStates = {
   meetings: [],
   IsCreateMeetingTrue: false,
   user: null,
+  createuser: null,
 };
 
 const storeMethods = (set, get) => ({
   setAuth: async (data) => {
     set({ isAuth: true, role: data.role });
   },
+
+  setCreateUser: async (data) => {
+    console.log(data);
+
+    try {
+      const res = await axios.post(
+        "http://161.35.18.13/api/users/create",
+        data,
+      );
+
+      // console.log(res.data, "res");
+      set({ createuser: res.data });
+    } catch (error) {
+      // console.log(error);
+      set({ error: error.response.data.message });
+    }
+  },
   setLogin: async (data) => {
     // console.log(data);
 
     try {
       const res = await axios.post(
-        "http://192.168.169.248:5001/users/signin",
+        "http://161.35.18.13/api/users/signin",
         data,
       );
 
@@ -62,7 +80,7 @@ const storeMethods = (set, get) => ({
 
     try {
       const res = await axios.post(
-        "http://192.168.169.248:5001/users/signup",
+        "http://161.35.18.13/api/users/signup",
         data,
       );
 
@@ -82,10 +100,10 @@ const storeMethods = (set, get) => ({
     // console.log(data.doc, "doc");
 
     try {
-      axios.post("http://192.168.169.248:5001/docs/create", data);
+      axios.post("http://161.35.18.13/api/docs/create", data);
       const res = await axios({
         method: "post",
-        url: "http://192.168.169.248:5001/docs/create",
+        url: "http://161.35.18.13/api/docs/create",
         data: data,
       });
 
@@ -98,7 +116,7 @@ const storeMethods = (set, get) => ({
   },
   getAllUsers: async (data) => {
     try {
-      const res = await axios.get("http://192.168.169.248:5001/users");
+      const res = await axios.get("http://161.35.18.13/api/users");
 
       console.log(res.data, "res");
       set({ allusers: res.data });
@@ -111,7 +129,7 @@ const storeMethods = (set, get) => ({
     // console.log(data, "data");
     try {
       const res = await axios.post(
-        "http://192.168.169.248:5001/meeting/create",
+        "http://161.35.18.13/api/meeting/create",
         data,
       );
 
@@ -132,7 +150,7 @@ const storeMethods = (set, get) => ({
     );
     try {
       const res = await axios.patch(
-        `http://192.168.169.248:5001/meeting/${data.id}`,
+        `http://161.35.18.13/api/meeting/${data.id}`,
         data,
       );
 
@@ -149,7 +167,7 @@ const storeMethods = (set, get) => ({
   getAllMeeting: async (data) => {
     try {
       const res = await axios.get(
-        `http://192.168.169.248:5001/meeting?ClientId=${data.id}`,
+        `http://161.35.18.13/api/meeting?ClientId=${data.id}`,
       );
 
       // console.log(res.data, "res");

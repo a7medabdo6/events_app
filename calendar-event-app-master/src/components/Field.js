@@ -6,13 +6,13 @@ const Field = (props) => {
   return (
     <TextInput
       {...props}
-      
+      width="100%"
       style={{
         borderRadius: 10,
         color: "black",
         paddingHorizontal: 5,
 
-        width: "100%",
+        width: 270,
         backgroundColor: "rgb(220,220, 220)",
         marginVertical: 10,
         paddingVertical: 10,

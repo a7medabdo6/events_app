@@ -35,7 +35,7 @@ const SendDoc = ({ route }) => {
       // console.log(resultBase64, "resultBase64");
 
       setUploadDoc({
-        user: user?.id,
+        user: updateuser?.id,
         type: item,
         doc: resultBase64,
         typeOfFile: result.mimeType,

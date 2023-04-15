@@ -649,9 +649,7 @@ export default function Home({ navigation }) {
                   //   date: currentDate,
                   //   todo: selectedTask,
                   // });
-                  console.log(
-                    "dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                  );
+                 
                   EditMeeting({
                     title: taskText,
                     notes: notesText,
