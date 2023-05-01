@@ -21,6 +21,6 @@ export class CreateDocsDto {
   @IsOptional()
   extra: string;
 
-  @IsNumber()
-  user: number;
+  @IsOptional()
+  userId: number;
 }

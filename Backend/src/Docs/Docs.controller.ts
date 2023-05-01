@@ -83,7 +83,7 @@ export class DocsController {
     //   throw new BadRequestException(req.fileValidationError);
     // }
 
-    const User = await this.usersService.findOne(+body.user);
+    const User = await this.usersService.findOne(+body.userId);
 
     const product = await this.DocsService.create(
       {
