@@ -13,7 +13,6 @@ export class CreateDocsDto {
   @IsString()
   type: string;
 
-  @IsString()
   @IsOptional()
   doc: string;
   @IsString()

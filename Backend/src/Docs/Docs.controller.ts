@@ -14,6 +14,7 @@ import {
   HttpException,
   HttpStatus,
   Query,
+  UploadedFile,
 } from '@nestjs/common';
 import { DocsService } from './Docs.service';
 import { CreateDocsDto } from './dto/create-Docs.dto';
@@ -22,6 +23,7 @@ import { CurrentUserInterceptor } from 'src/users/interceptors/current-user.inte
 import { AuthGuard } from 'src/guards/auth.guard';
 import {
   FileFieldsInterceptor,
+  FileInterceptor,
   FilesInterceptor,
 } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -50,10 +52,31 @@ export class DocsController {
     return this.DocsService.findAll(ClientId);
   }
   @Post('create')
+  @UseInterceptors(
+    FileInterceptor('doc', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, callback) => {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          callback(null, uniqueSuffix + extname(file.originalname));
+        },
+      }),
+      fileFilter: (req, file, callback) => {
+        if (!file.originalname.match(/\.(jpg|jpeg|png|gif|pdf|doc)$/)) {
+          return callback(new Error('Only image files are allowed!'), false);
+        }
+        callback(null, true);
+      },
+      limits: {
+        fileSize: 1024 * 1024, // 1 MB
+      },
+    }),
+  )
   async uploadFile(
     @Body() body: CreateDocsDto,
 
-    @Req() req: any,
+    @UploadedFile() file: Express.Multer.File,
   ) {
     // const isEmpty = Object.keys(files).length === 0;
     // if (isEmpty || !files || req.fileValidationError) {
@@ -65,6 +88,7 @@ export class DocsController {
     const product = await this.DocsService.create(
       {
         ...body,
+        doc: file?.filename,
       },
       User,
     );
