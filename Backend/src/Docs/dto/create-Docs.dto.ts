@@ -22,5 +22,5 @@ export class CreateDocsDto {
   extra: string;
 
   @IsNumber()
-  user: User;
+  user: number;
 }
