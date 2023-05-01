@@ -17,7 +17,7 @@ export class Docs {
   @Column()
   type: string;
 
-  @Column({ type: 'json' })
+  @Column({ type: 'json', })
   doc: string;
 
   @Column()

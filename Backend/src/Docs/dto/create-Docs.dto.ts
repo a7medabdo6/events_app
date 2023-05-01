@@ -16,7 +16,8 @@ export class CreateDocsDto {
   @IsString()
   @IsOptional()
   doc: string;
-
+  @IsString()
+  typeOfFile: string;
   @IsString()
   @IsOptional()
   extra: string;
