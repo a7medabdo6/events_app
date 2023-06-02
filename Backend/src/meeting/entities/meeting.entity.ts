@@ -26,13 +26,13 @@ export class Meeting {
   alarm_status: boolean;
   @ManyToOne(() => User, (user) => user.meetings) // specify inverse side as a second parameter
   user: User;
-  @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-  })
-  @Column({
-  })
-  public created_at: Date;
+  // // @CreateDateColumn({
+  // //   default: () => new Date,
+  // // })
+  // @Column({
+  // })
+  // public created_at: Date;
 
 
 }
+ 

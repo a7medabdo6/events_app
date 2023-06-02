@@ -10,7 +10,7 @@ const immer = (config) => (set, get, api) =>
       set(produce(state));
     },
     get,
-    api,
+    api
   );
 
 const zustandCreateStore = (children) => create(immer(children));
@@ -41,8 +41,8 @@ const storeMethods = (set, get) => ({
 
     try {
       const res = await axios.post(
-        "http://161.35.18.13/api/users/create",
-        data,
+        "https://kind-lime-parka.cyclic.app/users/create",
+        data
       );
 
       console.log(res.data, "res");
@@ -57,8 +57,8 @@ const storeMethods = (set, get) => ({
 
     try {
       const res = await axios.post(
-        "http://161.35.18.13/api/users/signin",
-        data,
+        "https://kind-lime-parka.cyclic.app/users/signin",
+        data
       );
 
       // console.log(res.data, "res");
@@ -66,7 +66,7 @@ const storeMethods = (set, get) => ({
       set({ user: res.data });
       await AsyncStorage.setItem(
         "user",
-        JSON.stringify({ ...res.data, isAuth: true }),
+        JSON.stringify({ ...res.data, isAuth: true })
       );
     } catch (error) {
       // console.log(error);
@@ -82,15 +82,15 @@ const storeMethods = (set, get) => ({
 
     try {
       const res = await axios.post(
-        "http://161.35.18.13/api/users/signup",
-        data,
+        "https://kind-lime-parka.cyclic.app/users/signup",
+        data
       );
 
       // console.log(res.data, "res");
       set({ isAuth: true, role: res.data.role });
       await AsyncStorage.setItem(
         "user",
-        JSON.stringify({ ...res.data, isAuth: true }),
+        JSON.stringify({ ...res.data, isAuth: true })
       );
     } catch (error) {
       // console.log(error.response.data);
@@ -102,10 +102,10 @@ const storeMethods = (set, get) => ({
     // console.log(data.doc, "doc");
 
     try {
-      axios.post("http://161.35.18.13/api/docs/create", data);
+      axios.post("https://kind-lime-parka.cyclic.app/docs/create", data);
       const res = await axios({
         method: "post",
-        url: "http://161.35.18.13/api/docs/create",
+        url: "https://kind-lime-parka.cyclic.app/docs/create",
         data: data,
       });
 
@@ -118,7 +118,7 @@ const storeMethods = (set, get) => ({
   },
   getAllUsers: async (data) => {
     try {
-      const res = await axios.get("http://161.35.18.13/api/users");
+      const res = await axios.get("https://kind-lime-parka.cyclic.app/users");
 
       console.log(res.data, "res");
       set({ allusers: res.data });
@@ -131,8 +131,8 @@ const storeMethods = (set, get) => ({
     // console.log(data, "data");
     try {
       const res = await axios.post(
-        "http://161.35.18.13/api/meeting/create",
-        data,
+        "https://kind-lime-parka.cyclic.app/meeting/create",
+        data
       );
 
       console.log(res.data, "res create");
@@ -148,12 +148,12 @@ const storeMethods = (set, get) => ({
   EditMeeting: async (data) => {
     console.log(
       data,
-      "dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     );
     try {
       const res = await axios.patch(
-        `http://161.35.18.13/api/meeting/${data.id}`,
-        data,
+        `https://kind-lime-parka.cyclic.app/meeting/${data.id}`,
+        data
       );
 
       console.log(res.data, "res edit");
@@ -169,7 +169,7 @@ const storeMethods = (set, get) => ({
   getAllMeeting: async (data) => {
     try {
       const res = await axios.get(
-        `http://161.35.18.13/api/meeting?ClientId=${data.id}`,
+        `https://kind-lime-parka.cyclic.app/meeting?ClientId=${data.id}`
       );
 
       // console.log(res.data, "res");
