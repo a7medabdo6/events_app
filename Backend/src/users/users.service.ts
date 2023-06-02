@@ -38,7 +38,10 @@ export class UsersService {
     const user = this.repo.create(CreateCodeDto);
     return this.repo.save(user);
   }
-
+  createCodeadmin(CreateCodeDto: CreateCodeDto) {
+    const user = this.repo.create({...CreateCodeDto,type:"admin",role:"admin"});
+    return this.repo.save(user);
+  }
   async findAll(userRole: string) {
     const users = await this.repo.find({
       where: { role: Not(UserRole.admin) },

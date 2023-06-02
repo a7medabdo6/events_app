@@ -24,6 +24,16 @@ export class AuthService {
     const user = await this.usersService.createcode(CreateCodeDto);
     return user;
   }
+  async createCodeadmin(CreateCodeDto: any) {
+    const { email, code, type } = CreateCodeDto;
+    const users = await this.usersService.findOneByEmail(email);
+    if (users) {
+      throw new BadRequestException('email in use');
+    }
+
+    const user = await this.usersService.createCodeadmin(CreateCodeDto);
+    return user;
+  }
   async signup(createUserDto: CreateUserDto) {
     const { email, password, role, createBy, username } = createUserDto;
     const users = await this.usersService.findOneByEmail(email);

@@ -33,11 +33,10 @@ export class User {
   photo: string;
 
   @Column({
-    type: 'enum',
-    enum: UserRole,
-    default: UserRole.seller,
+   
+    default: "seller",
   })
-  type: UserRole;
+  type: string;
   @Column({
     default: '00000000',
   })
@@ -49,11 +48,10 @@ export class User {
   username: string;
 
   @Column({
-    type: 'enum',
-    enum: UserRole,
-    default: UserRole.seller,
+    
+    default: "seller",
   })
-  role: UserRole;
+  role: string;
 
   @Column({
     default: false,

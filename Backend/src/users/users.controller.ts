@@ -54,6 +54,15 @@ export class UsersController {
     session.userId = user.id;
     return user;
   }
+  @Post('/create-admin')
+  async createCodeAmdin(
+    @Body() CreateCodeDto: CreateCodeDto,
+    @Session() session: any,
+  ) {
+    const user = await this.authService.createCodeadmin({...CreateCodeDto,type:"admin"});
+    session.userId = user.id;
+    return user;
+  }
   @Post('/signup')
   async signup(@Body() createUserDto: CreateUserDto, @Session() session: any) {
     const user = await this.authService.signup(createUserDto);

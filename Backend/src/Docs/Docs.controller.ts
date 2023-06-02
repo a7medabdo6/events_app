@@ -51,7 +51,7 @@ export class DocsController {
   }
   @Post('create')
   async uploadFile(
-    @Body() body: CreateDocsDto,
+    @Body() body: any,
 
     @Req() req: any,
   ) {
@@ -59,9 +59,9 @@ export class DocsController {
     // if (isEmpty || !files || req.fileValidationError) {
     //   throw new BadRequestException(req.fileValidationError);
     // }
+    console.log(body)
 
     const User = await this.usersService.findOne(+body.user);
-
     const product = await this.DocsService.create(
       {
         ...body,
