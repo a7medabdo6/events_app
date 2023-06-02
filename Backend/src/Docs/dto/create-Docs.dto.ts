@@ -13,14 +13,14 @@ export class CreateDocsDto {
   @IsString()
   type: string;
 
-  @IsString()
   @IsOptional()
   doc: string;
-
+  @IsString()
+  typeOfFile: string;
   @IsString()
   @IsOptional()
   extra: string;
 
-  @IsNumber()
-  user: User;
+  @IsOptional()
+  userId: number;
 }
