@@ -30,7 +30,7 @@ const CreateUser = ({ setModalVisible, modalVisible }) => {
       error: state.error,
       createUser: state.createuser,
       setcreteUserEMpty: state.setcreteUserEMpty,
-    }),
+    })
   );
   const onShare = async () => {
     try {
@@ -74,7 +74,7 @@ const CreateUser = ({ setModalVisible, modalVisible }) => {
           marginVertical: 20,
         }}
       >
-        Create Code For User
+        Create User
       </Text>
       <View
         style={{
@@ -105,7 +105,7 @@ const CreateUser = ({ setModalVisible, modalVisible }) => {
             keyboardType={"text"}
           />
           <Field
-            placeholder="Create Code"
+            placeholder="Code"
             onChangeText={(e) => setcode(e)}
             keyboardType={"text"}
           />

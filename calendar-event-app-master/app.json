@@ -3,6 +3,14 @@
     "name": "notificationapp",
     "slug": "notificationapp",
     "privacy": "public",
+    "plugins": [
+      [
+        "expo-updates",
+        {
+          "username": "account-username"
+        }
+      ]
+    ],
     "platforms": [
       "ios",
       "android",

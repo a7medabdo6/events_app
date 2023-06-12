@@ -41,14 +41,14 @@ const storeMethods = (set, get) => ({
 
     try {
       const res = await axios.post(
-        "https://kind-lime-parka.cyclic.app/users/create",
+        "http://207.154.251.59:5001/users/create",
         data
       );
 
       console.log(res.data, "res");
       set({ createuser: res.data });
     } catch (error) {
-      // console.log(error);
+      console.log(error);
       set({ error: error.response.data.message });
     }
   },
@@ -57,7 +57,7 @@ const storeMethods = (set, get) => ({
 
     try {
       const res = await axios.post(
-        "https://kind-lime-parka.cyclic.app/users/signin",
+        "http://207.154.251.59:5001/users/signin",
         data
       );
 
@@ -69,7 +69,7 @@ const storeMethods = (set, get) => ({
         JSON.stringify({ ...res.data, isAuth: true })
       );
     } catch (error) {
-      // console.log(error);
+      console.log(error);
       set({ error: error.response.data.message });
     }
   },
@@ -82,7 +82,7 @@ const storeMethods = (set, get) => ({
 
     try {
       const res = await axios.post(
-        "https://kind-lime-parka.cyclic.app/users/signup",
+        "http://207.154.251.59:5001/users/signup",
         data
       );
 
@@ -99,31 +99,31 @@ const storeMethods = (set, get) => ({
   },
 
   setUploadDoc: async (data) => {
-    // console.log(data.doc, "doc");
+    console.log(data, "doc");
 
     try {
-      axios.post("https://kind-lime-parka.cyclic.app/docs/create", data);
+      // axios.post("http://207.154.251.59:5001/docs/create", data);
       const res = await axios({
         method: "post",
-        url: "https://kind-lime-parka.cyclic.app/docs/create",
+        url: "http://207.154.251.59:5001/docs/create",
         data: data,
       });
 
-      // console.log(res.data, "res create");
+      console.log(res, "res create");
 
       // set({ isAuth: true, role: res.data.role });
     } catch (error) {
-      // console.log(error.response.data);
+      console.log(error, "error");
     }
   },
   getAllUsers: async (data) => {
     try {
-      const res = await axios.get("https://kind-lime-parka.cyclic.app/users");
+      const res = await axios.get("http://207.154.251.59:5001/users");
 
       console.log(res.data, "res");
       set({ allusers: res.data });
     } catch (error) {
-      // console.log(error.response.data);
+      console.log(error.response.data);
       // set({ error: error.response.data.message });
     }
   },
@@ -131,7 +131,7 @@ const storeMethods = (set, get) => ({
     // console.log(data, "data");
     try {
       const res = await axios.post(
-        "https://kind-lime-parka.cyclic.app/meeting/create",
+        "http://207.154.251.59:5001/meeting/create",
         data
       );
 
@@ -152,7 +152,7 @@ const storeMethods = (set, get) => ({
     );
     try {
       const res = await axios.patch(
-        `https://kind-lime-parka.cyclic.app/meeting/${data.id}`,
+        `http://207.154.251.59:5001/meeting/${data.id}`,
         data
       );
 
@@ -169,7 +169,7 @@ const storeMethods = (set, get) => ({
   getAllMeeting: async (data) => {
     try {
       const res = await axios.get(
-        `https://kind-lime-parka.cyclic.app/meeting?ClientId=${data.id}`
+        `http://207.154.251.59:5001/meeting?ClientId=${data.id}`
       );
 
       // console.log(res.data, "res");

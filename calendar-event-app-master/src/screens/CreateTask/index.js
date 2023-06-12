@@ -141,7 +141,7 @@ export default function CreateTask({ navigation, route }) {
 
   const [selectedDay, setSelectedDay] = useState({
     [`${moment().format("YYYY")}-${moment().format("MM")}-${moment().format(
-      "DD",
+      "DD"
     )}`]: {
       selected: true,
       selectedColor: "#2196f3",
@@ -160,7 +160,7 @@ export default function CreateTask({ navigation, route }) {
   const [value, setValue] = useState(null);
   //
   const [visibleHeight, setVisibleHeight] = useState(
-    Dimensions.get("window").height,
+    Dimensions.get("window").height
   );
   const [isAlarmSet, setAlarmSet] = useState(false);
   const [alarmTime, setAlarmTime] = useState(moment().format("YYYY-MM-DD"));
@@ -226,7 +226,7 @@ export default function CreateTask({ navigation, route }) {
     try {
       const createEventAsyncResNew = await Calendar.createEventAsync(
         calendarId.toString(),
-        event,
+        event
       );
       return createEventAsyncResNew;
     } catch (error) {
@@ -246,7 +246,7 @@ export default function CreateTask({ navigation, route }) {
       alarm_time: alarmTime,
       user: value,
       color: `rgb(${Math.floor(Math.random() * Math.floor(256))},${Math.floor(
-        Math.random() * Math.floor(256),
+        Math.random() * Math.floor(256)
       )},${Math.floor(Math.random() * Math.floor(256))})`,
     });
     // const creatTodo = {
@@ -503,7 +503,7 @@ export default function CreateTask({ navigation, route }) {
                   color: "#fff",
                 }}
               >
-                ADD YOUR Meeting
+                Add To Calendar
               </Text>
             </TouchableOpacity>
           </ScrollView>

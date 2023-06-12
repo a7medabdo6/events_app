@@ -32,7 +32,7 @@ const Cards = ({ user }) => {
   };
 
   return (
-    <View style={{ marginTop: 20, width: "90%" }}>
+    <View style={{ marginTop: 10, width: "90%" }}>
       <TouchableOpacity onPress={toggleBottomNavigationView}>
         <View style={[styles.card, styles.shadowProp]}>
           <View
@@ -40,15 +40,21 @@ const Cards = ({ user }) => {
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
-              paddingTop: 20,
-              marginBottom: 13,
+              paddingTop: 0,
+              marginBottom: 0,
             }}
           >
             <View style={{ display: "flex", flexDirection: "row" }}>
               <View style={{ marginHorizontal: 15 }}>
                 <Image
                   style={{ width: 100, height: 100, borderRadius: 50 }}
-                  source={require("../images/logo.jpg")}
+                  source={
+                    user?.role == "seller"
+                      ? require("../images/seller.png")
+                      : user?.role == "buyer"
+                      ? require("../images/buyer.png")
+                      : require("../images/admin.jpeg")
+                  }
                 />
               </View>
               <View
@@ -192,7 +198,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginRight: 50,
     width: "100%",
-    marginVertical: 8,
+    marginVertical: 4,
   },
   shadowProp: {
     shadowColor: "#000",

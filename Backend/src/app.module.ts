@@ -44,7 +44,7 @@ import { Meeting } from './meeting/entities/meeting.entity';
       // password: 'AVNS_f_8byhoNldd0WiFmg7A',
       // database: 'defaultdb',
 
-      host: 'localhost',
+      host: 'db',
       port: 3306,
       username: 'admin',
       password: 'eventsPassword',

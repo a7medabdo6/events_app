@@ -1,4 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
+import * as Updates from "expo-updates";
+import * as Linking from "expo-linking";
+
 import {
   Alert,
   Dimensions,
@@ -205,7 +208,7 @@ export default function Home({ navigation }) {
   useEffect(() => {
     // console.log(meetings, "meetingggggggggggggggggggggggggggggggg");
     setCurrentTodoList((old) =>
-      meetings?.filter((item) => item.alarm_time == currentDate),
+      meetings?.filter((item) => item.alarm_time == currentDate)
     );
     return () => {};
   }, [meetings]);
@@ -251,8 +254,8 @@ export default function Home({ navigation }) {
   const [markedDate, setMarkedDate] = useState([]);
   const [currentDate, setCurrentDate] = useState(
     `${moment().format("YYYY")}-${moment().format("MM")}-${moment().format(
-      "DD",
-    )}`,
+      "DD"
+    )}`
   );
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -292,7 +295,7 @@ export default function Home({ navigation }) {
     handleDeletePreviousDayTask(todo);
     // console.log(todo, currentDate, "toda");
     setCurrentTodoList((old) =>
-      meetings?.filter((item) => item.alarm_time == currentDate),
+      meetings?.filter((item) => item.alarm_time == currentDate)
     );
   }, [todo, currentDate, isFocused, IsCreateMeetingTrue]);
 
@@ -300,7 +303,7 @@ export default function Home({ navigation }) {
     try {
       if (oldTodo !== []) {
         const todayDate = `${moment().format("YYYY")}-${moment().format(
-          "MM",
+          "MM"
         )}-${moment().format("DD")}`;
         const checkDate = moment(todayDate);
         await oldTodo.filter((item) => {
@@ -310,7 +313,7 @@ export default function Home({ navigation }) {
             item.todoList.forEach(async (listValue) => {
               try {
                 await Calendar.deleteEventAsync(
-                  listValue.alarm.createEventAsyncRes.toString(),
+                  listValue.alarm.createEventAsyncRes.toString()
                 );
               } catch (error) {
                 // console.log(error);
@@ -341,7 +344,7 @@ export default function Home({ navigation }) {
 
       // console.log(meetings?.filter((item) => item.alarm_time == currentDate));
       setCurrentTodoList((old) =>
-        meetings?.filter((item) => item.alarm_time == currentDate),
+        meetings?.filter((item) => item.alarm_time == currentDate)
       );
 
       if (todo !== [] && todo) {
@@ -394,7 +397,7 @@ export default function Home({ navigation }) {
       try {
         const createEventAsyncRes = await Calendar.createEventAsync(
           calendarId.toString(),
-          event,
+          event
         );
         let updateTask = JSON.parse(JSON.stringify(selectedTask));
         updateTask.alarm.createEventAsyncRes = createEventAsyncRes;
@@ -406,7 +409,7 @@ export default function Home({ navigation }) {
       try {
         await Calendar.updateEventAsync(
           selectedTask?.alarm.createEventAsyncRes.toString(),
-          event,
+          event
         );
       } catch (error) {
         // console.log(error);
@@ -418,7 +421,7 @@ export default function Home({ navigation }) {
     try {
       if (selectedTask?.alarm.createEventAsyncRes) {
         await Calendar.deleteEventAsync(
-          selectedTask?.alarm.createEventAsyncRes,
+          selectedTask?.alarm.createEventAsyncRes
         );
       }
       let updateTask = JSON.parse(JSON.stringify(selectedTask));
@@ -428,18 +431,39 @@ export default function Home({ navigation }) {
       // console.log("deleteAlarm", error.message);
     }
   };
-
+  const closeApp = () => {
+    // open the device's home screen
+    console.log("close test");
+    Linking.openURL("notificationapp://");
+  };
   const getEvent = async () => {
     if (selectedTask?.alarm.createEventAsyncRes) {
       try {
         await Calendar.getEventAsync(
-          selectedTask?.alarm.createEventAsyncRes.toString(),
+          selectedTask?.alarm.createEventAsyncRes.toString()
         );
       } catch (error) {
         // console.log(error);
       }
     }
   };
+  async function onFetchUpdateAsync() {
+    try {
+      const update = await Updates.checkForUpdateAsync();
+
+      if (update.isAvailable) {
+        await Updates.fetchUpdateAsync();
+        await Updates.reloadAsync();
+      }
+    } catch (error) {
+      // You can also add an alert() to see the error message in case of an error when fetching updates.
+    }
+  }
+  useEffect(() => {
+    if (!user) {
+      onFetchUpdateAsync();
+    }
+  }, [AsyncStorage, user]);
 
   const createNewCalendar = async () => {
     const defaultCalendarSource =
@@ -490,6 +514,8 @@ export default function Home({ navigation }) {
         <TouchableOpacity
           onPress={() => {
             AsyncStorage.removeItem("user");
+            setUser(null);
+            closeApp();
           }}
         >
           <AntDesign name="logout" size={24} color={"white"} />
@@ -649,7 +675,7 @@ export default function Home({ navigation }) {
                   //   date: currentDate,
                   //   todo: selectedTask,
                   // });
-                 
+
                   EditMeeting({
                     title: taskText,
                     notes: notesText,
@@ -742,7 +768,7 @@ export default function Home({ navigation }) {
           selectedDate={currentDate}
           onDateSelected={(date) => {
             const selectedDate = `${moment(date).format("YYYY")}-${moment(
-              date,
+              date
             ).format("MM")}-${moment(date).format("DD")}`;
             updateCurrentTask(selectedDate);
             setCurrentDate(selectedDate);

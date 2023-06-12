@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
 });
 
 export default function Home({ user }) {
+  console.log(user?.Docs, "user?.Docs");
   const [todoListForCash, setTodoListForCash] = useState([
     "Executed Contract",
     "Escrow Receipt",
@@ -158,9 +159,13 @@ export default function Home({ user }) {
   ]);
   const [todoListForFinancing, setTodoListForFinancing] = useState([
     "Financing",
-    "Financing Receipt",
-    "Financing Period",
-    "Financing Closing",
+    "Executed contract",
+    "Escrow Receipt",
+    "Inspection Period",
+    "Appraisal",
+    "Survey",
+    "Full Loan Approval",
+    "Closing",
   ]);
   const [Items, setItems] = useState([
     { label: "Cash", value: "Cash" },
@@ -180,21 +185,35 @@ export default function Home({ user }) {
         <View
           style={{
             width: "100%",
-            height: Dimensions.get("window").height - 170,
+            // height: Dimensions.get("window").height - 170,
           }}
         >
           <ScrollView
+            style={{ height: "100%" }}
             contentContainerStyle={{
               paddingBottom: 20,
+              height: "100%",
             }}
           >
             <View
-              style={{ marginVertical: 10, width: "85%", alignSelf: "center" }}
+              style={{
+                paddingVertical: 10,
+                // marginTop: 15,
+                width: "85%",
+                alignSelf: "center",
+                height: 150,
+                zIndex: 555,
+                // backgroundColor: "red",
+              }}
             >
               <DropDownPicker
                 open={open}
                 value={value}
                 items={Items}
+                // dropDownContainerStyle={{
+                //   // height: 150,
+                //   zIndex: 5555,
+                // }}
                 setOpen={setOpen}
                 setValue={setValue}
                 setItems={setItems}
@@ -268,7 +287,7 @@ export default function Home({ user }) {
                           marginLeft: 20,
                         }}
                       >
-                        <Text
+                        {/* <Text
                           style={{
                             color: "#BBBBBB",
                             fontSize: 14,
@@ -284,7 +303,7 @@ export default function Home({ user }) {
                           }}
                         >
                           {"this is first survey for john"}
-                        </Text>
+                        </Text> */}
                       </View>
                     </View>
                   </View>
@@ -321,16 +340,6 @@ export default function Home({ user }) {
                         alignItems: "center",
                       }}
                     >
-                      {/* <View
-                      style={{
-                        height: 12,
-                        width: 12,
-                        borderRadius: 6,
-                        backgroundColor: "#2196f3",
-                        marginRight: 8,
-                      }}
-                    /> */}
-                      {/* <Checkbox /> */}
                       <AntDesign
                         name="checkcircleo"
                         size={24}
@@ -360,7 +369,7 @@ export default function Home({ user }) {
                           marginLeft: 20,
                         }}
                       >
-                        <Text
+                        {/* <Text
                           style={{
                             color: "#BBBBBB",
                             fontSize: 14,
@@ -368,15 +377,15 @@ export default function Home({ user }) {
                           }}
                         >
                           01/01/2023
-                        </Text>
-                        <Text
+                        </Text> */}
+                        {/* <Text
                           style={{
                             color: "#BBBBBB",
                             fontSize: 14,
                           }}
                         >
                           {"this is first survey for john"}
-                        </Text>
+                        </Text> */}
                       </View>
                     </View>
                   </View>
