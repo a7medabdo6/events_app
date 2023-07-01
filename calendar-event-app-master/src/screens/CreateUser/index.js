@@ -105,7 +105,7 @@ const CreateUser = ({ setModalVisible, modalVisible }) => {
             keyboardType={"text"}
           />
           <Field
-            placeholder="Code"
+            placeholder="Password"
             onChangeText={(e) => setcode(e)}
             keyboardType={"text"}
           />

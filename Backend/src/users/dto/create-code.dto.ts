@@ -6,6 +6,7 @@ import {
   IsString,
   Max,
   Min,
+  IsNotEmpty
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 export enum UserRole {
@@ -14,12 +15,13 @@ export enum UserRole {
   buyer = 'buyer',
 }
 export class CreateCodeDto {
-  @IsEmail()
+  @IsEmail({}, { message: 'Must be a valid email' })
   email: string;
 
   @IsString()
+  @IsNotEmpty({ message: 'Please provide Code' })
   code: string;
 
-  @IsEnum(UserRole)
+  @IsEnum(UserRole, { message: 'Invalid user role.' })
   type: UserRole;
 }

@@ -13,6 +13,7 @@ import {
 } from "@calendar/screens";
 import { useStore } from "@calendar/store";
 import UploadScreen from "../screens/TestCards";
+import Preview from "../screens/preview";
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,7 @@ function MainNavigatorWrapper() {
       <Stack.Screen component={AnimatedFlatList} name={"AnimatedFlatList"} />
       <Stack.Screen component={Profile} name={"Profile"} />
       <Stack.Screen component={UploadScreen} name={"upload"} />
+      <Stack.Screen component={Preview} name={"preview"} />
 
       {/* <Stack.Screen component={Profile} name={Routes.Profile} /> */}
       {/* <Stack.Screen component={AnimatedFlatList} name={Routes.AnimatedFlatList} /> */}

@@ -158,6 +158,7 @@ export default function Home({ user }) {
     "Closing",
   ]);
   const [todoListForFinancing, setTodoListForFinancing] = useState([
+    "Preapproval letter",
     "Financing",
     "Executed contract",
     "Escrow Receipt",
@@ -232,7 +233,11 @@ export default function Home({ user }) {
                   onPress={() =>
                     user?.Docs?.filter((docitem) => docitem.type == item)
                       ?.length > 0
-                      ? null
+                      ? navigation.push("preview", {
+                          doc: user?.Docs?.filter(
+                            (docitem) => docitem.type == item
+                          ),
+                        })
                       : navigation.push("upload", { item, user })
                   }
                   style={styles.taskListContent}
@@ -324,7 +329,11 @@ export default function Home({ user }) {
                   onPress={() =>
                     user?.Docs?.filter((docitem) => docitem.type == item)
                       ?.length > 0
-                      ? null
+                      ? navigation.push("preview", {
+                          doc: user?.Docs?.filter(
+                            (docitem) => docitem.type == item
+                          ),
+                        })
                       : navigation.push("upload", { item, user })
                   }
                   style={styles.taskListContent}
