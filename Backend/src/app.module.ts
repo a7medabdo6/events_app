@@ -38,10 +38,10 @@ import { Meeting } from './meeting/entities/meeting.entity';
       // database: 'data.db',
        type: 'mysql',
 
-      // host: 'db-mysql-fra1-00835-do-user-13515466-0.b.db.ondigitalocean.com',
+      // host: 'db-mysql-fra1-26743-do-user-14185863-0.b.db.ondigitalocean.com',
       // port: 25060,
       // username: 'doadmin',
-      // password: 'AVNS_f_8byhoNldd0WiFmg7A',
+      // password: 'AVNS_p_SAhjLUnKwb-filZiT',
       // database: 'defaultdb',
 
       host: 'db',
@@ -49,7 +49,7 @@ import { Meeting } from './meeting/entities/meeting.entity';
       username: 'admin',
       password: 'eventsPassword',
       database: 'events', 
-      entities: [User, Docs, ServiceUser, Meeting],
+      entities: [User, Docs, ServiceUser, Meeting], 
       synchronize: true,
     }),
     UsersModule,

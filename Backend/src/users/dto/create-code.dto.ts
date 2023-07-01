@@ -18,7 +18,6 @@ export class CreateCodeDto {
   @IsEmail({}, { message: 'Must be a valid email' })
   email: string;
 
-  @IsString()
   @IsNotEmpty({ message: 'Please provide Code' })
   code: string;
 
