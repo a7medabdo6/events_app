@@ -16,7 +16,8 @@ export class UserDto {
   role: string;
   @Expose()
   image: string;
-
+  @Expose()
+  phone: string;
   @Expose()
   createBy: number;
 

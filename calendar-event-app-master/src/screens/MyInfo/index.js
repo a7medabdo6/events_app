@@ -28,9 +28,10 @@ const MyInfo = ({ setModalVisible, modalVisible }) => {
   const [name, setname] = useState("");
   const [type, settype] = useState("");
   const [value, setValue] = useState(null);
-  const { error, createUser } = useStore((state) => ({
+  const { setChangeInfo } = useStore((state) => ({
     error: state.error,
     createUser: state.createuser,
+    setChangeInfo: state.setChangeInfo,
   }));
 
   const [user, setUser] = useState(null);
@@ -101,6 +102,11 @@ const MyInfo = ({ setModalVisible, modalVisible }) => {
       // console.log(res.data, "res create");
 
       // set({ isAuth: true, role: res.data.role });
+      await AsyncStorage.setItem(
+        "user",
+        JSON.stringify({ ...res.data, isAuth: true })
+      );
+      setChangeInfo(res.data);
       navigation.push("AnimatedFlatList");
     } catch (error) {
       console.log(error, "errorr");

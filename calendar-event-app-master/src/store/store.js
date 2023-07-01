@@ -73,7 +73,11 @@ const storeMethods = (set, get) => ({
       set({ error: error.response.data.message });
     }
   },
+  setChangeInfo: async (data) => {
+    // console.log(data);
 
+    set({ user: data });
+  },
   setErrorForSignupEmpty: async () => {
     set({ errorForSignUp: null });
   },

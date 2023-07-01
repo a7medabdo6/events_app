@@ -2,7 +2,7 @@
 // https://aboutreact.com/react-native-bottom-sheet/
 
 // import React in our code
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // import all the components we are going to use
 import {
@@ -30,6 +30,9 @@ const Cards = ({ user }) => {
     //Toggling the visibility state of the bottom sheet
     setVisible(!visible);
   };
+  useEffect(() => {
+    console.log(user?.image, "user?.image");
+  }, [user]);
 
   return (
     <View style={{ marginTop: 10, width: "90%" }}>
@@ -44,15 +47,26 @@ const Cards = ({ user }) => {
               marginBottom: 0,
             }}
           >
-            <View style={{ display: "flex", flexDirection: "row" }}>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <View style={{ marginHorizontal: 15 }}>
                 <Image
-                  style={{ width: 100, height: 100, borderRadius: 50 }}
+                  style={{ width: 40, height: 40, borderRadius: 50 }}
                   source={
                     user?.role == "seller"
                       ? require("../images/seller.png")
                       : user?.role == "buyer"
                       ? require("../images/buyer.png")
+                      : user?.image
+                      ? {
+                          uri: `http://207.154.251.59:5001/public/${user?.image}`,
+                        }
                       : require("../images/admin.jpeg")
                   }
                 />
