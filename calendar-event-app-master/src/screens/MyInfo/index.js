@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Touchable, TouchableOpacity, Share } from "react-native";
+import {
+  View,
+  Text,
+  Touchable,
+  TouchableOpacity,
+  Share,
+  Image,
+  Button,
+} from "react-native";
 import Btn from "../../components/Btn";
 import { darkGreen } from "../../components/Constants";
 import Field from "../../components/Field";
@@ -7,6 +15,8 @@ import useStore from "../../store/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
+
 const MyInfo = ({ setModalVisible, modalVisible }) => {
   const [email, setemail] = useState("");
   const [code, setcode] = useState(null);
@@ -14,6 +24,9 @@ const MyInfo = ({ setModalVisible, modalVisible }) => {
   const [phone, setphone] = useState("");
   const navigation = useNavigation();
 
+  const [uri, seturi] = useState("");
+  const [name, setname] = useState("");
+  const [type, settype] = useState("");
   const [value, setValue] = useState(null);
   const { error, createUser } = useStore((state) => ({
     error: state.error,
@@ -24,7 +37,7 @@ const MyInfo = ({ setModalVisible, modalVisible }) => {
 
   const getuser = async () => {
     const userjson = await AsyncStorage.getItem("user");
-    console.log(userjson, "useerrrrr");
+    // console.log(userjson, "useerrrrr");
     setUser(JSON.parse(userjson));
   };
   useEffect(() => {
@@ -33,7 +46,7 @@ const MyInfo = ({ setModalVisible, modalVisible }) => {
   }, []);
 
   useEffect(() => {
-    console.log(user, "user useerrrrr");
+    // console.log(user, "user useerrrrr");
 
     if (user) {
       setemail(user?.email);
@@ -41,12 +54,27 @@ const MyInfo = ({ setModalVisible, modalVisible }) => {
       setphone(user?.phone);
     }
   }, [user]);
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result?.cancelled) {
+      const fileExtension = result.uri.split(".").pop(); // Extract file extension from URI
+      const fileName = `${Date.now()}.${fileExtension}`; // Generate unique file name
+      seturi(result.uri);
+      setname(fileName);
+    }
+  };
   const UpdateUser = async () => {
     let formdata = new FormData();
     formdata.append("image", {
       uri: uri, // this is the path to your file. see Expo ImagePicker or React Native ImagePicker
-      type: type, // example: image/jpg
-      name: name, // example: upload.jpg
+      name: name,
+      type: "image/jpeg",
     });
     formdata.append("email", email);
     formdata.append("phone", phone);
@@ -62,7 +90,7 @@ const MyInfo = ({ setModalVisible, modalVisible }) => {
           },
         }
       );
-      console.log(res, "res");
+      console.log(res.data, "ressssssssssssssssss");
       // const res = await axios({
       //   method: "post",
       //   url: "http://207.154.251.59/api/docs/create",
@@ -74,16 +102,19 @@ const MyInfo = ({ setModalVisible, modalVisible }) => {
       // set({ isAuth: true, role: res.data.role });
       navigation.push("AnimatedFlatList");
     } catch (error) {
-      console.log(error.response.data, "errorr");
+      console.log(error, "errorr");
     }
   };
+  useEffect(() => {
+    console.log(user, "user info");
+  }, [user]);
   return (
     <View
       style={{
         alignItems: "center",
         display: "flex",
         width: "100%",
-        height: "50%",
+        height: "100%",
         // backgroundColor: "red",
       }}
     >
@@ -132,6 +163,18 @@ const MyInfo = ({ setModalVisible, modalVisible }) => {
             keyboardType={"text"}
             value={phone}
           />
+          <View style={{ alignItems: "center", justifyContent: "center" }}>
+            {uri && (
+              <Image
+                source={{ uri: uri }}
+                style={{ width: 200, height: 200 }}
+              />
+            )}
+            <Button
+              title="Pick an image from camera roll"
+              onPress={pickImage}
+            />
+          </View>
           <Btn
             textColor="white"
             bgColor={darkGreen}

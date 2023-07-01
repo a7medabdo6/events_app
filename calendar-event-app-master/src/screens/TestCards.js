@@ -19,6 +19,7 @@ const SendDoc = ({ route }) => {
   const { SetUploadDoc } = useStore((state) => ({
     SetUploadDoc: state.SetUploadDoc,
   }));
+
   const Upload = async (data) => {
     let formdata = new FormData();
     formdata.append("doc", {

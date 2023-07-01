@@ -61,7 +61,7 @@ const storeMethods = (set, get) => ({
         data
       );
 
-      // console.log(res.data, "res");
+      console.log(res.data, "login res");
       set({ isAuth: true, role: res.data.role });
       set({ user: res.data });
       await AsyncStorage.setItem(
