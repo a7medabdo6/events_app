@@ -9,7 +9,7 @@ import useStore from "../../store/store";
 import DropDownPicker from "react-native-dropdown-picker";
 const CreateUser = ({ setModalVisible, modalVisible }) => {
   const [email, setemail] = useState("");
-  const [code, setcode] = useState("");
+  const [code, setcode] = useState(null);
   const [type, settype] = useState("");
   const [Items, setItems] = useState([
     {
@@ -118,7 +118,7 @@ const CreateUser = ({ setModalVisible, modalVisible }) => {
             setItems={setItems}
             style={{ marginVertical: 10 }}
           />
-          <View
+          {/* <View
             style={{
               width: "78%",
               paddingRight: 16,
@@ -129,7 +129,32 @@ const CreateUser = ({ setModalVisible, modalVisible }) => {
                 {error}
               </Text>
             )}
-          </View>
+          </View> */}
+          {error?.includes("email must be an email") && (
+            <View
+              style={{
+                width: "78%",
+                paddingRight: 16,
+              }}
+            >
+              <Text style={{ color: "red", fontWeight: "bold", fontSize: 16 }}>
+                Email : Must be a valid email
+              </Text>
+            </View>
+          )}
+          {error?.includes("type must be a valid enum value") && (
+            <View
+              style={{
+                width: "78%",
+                paddingRight: 16,
+              }}
+            >
+              <Text style={{ color: "red", fontWeight: "bold", fontSize: 16 }}>
+                Invalid user role.
+              </Text>
+            </View>
+          )}
+
           <Btn
             textColor="white"
             bgColor={darkGreen}
