@@ -67,6 +67,7 @@ const MyInfo = ({ setModalVisible, modalVisible }) => {
       const fileName = `${Date.now()}.${fileExtension}`; // Generate unique file name
       seturi(result.uri);
       setname(fileName);
+      settype(fileExtension);
     }
   };
   const UpdateUser = async () => {
@@ -74,7 +75,7 @@ const MyInfo = ({ setModalVisible, modalVisible }) => {
     formdata.append("image", {
       uri: uri, // this is the path to your file. see Expo ImagePicker or React Native ImagePicker
       name: name,
-      type: "image/jpeg",
+      type: `image/${type}`,
     });
     formdata.append("email", email);
     formdata.append("phone", phone);
