@@ -33,6 +33,10 @@ export class User {
   photo: string;
 
   @Column({
+    default: null,
+  })
+  image: string;
+  @Column({
    
     default: "seller",
   })

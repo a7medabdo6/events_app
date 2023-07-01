@@ -1,5 +1,7 @@
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
 import React, { useState, useEffect } from "react";
 import {
   ActivityIndicator,
@@ -134,6 +136,14 @@ const App = ({ users }) => {
             // style={focused && styles.active}
           />
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.push("myInfo")}>
+          <MaterialCommunityIcons
+            name="face-man-profile"
+            size={24}
+            color="white"
+          />
+        </TouchableOpacity>
+
         <ModalComponent
           setModalVisible={setModalVisible}
           modalVisible={modalVisible}
@@ -151,7 +161,7 @@ const App = ({ users }) => {
           }}
           onScroll={Animated.event(
             [{ nativeEvent: { contentOffset: { y: Yscroll } } }],
-            { useNativeDriver: true },
+            { useNativeDriver: true }
           )}
         />
       )}

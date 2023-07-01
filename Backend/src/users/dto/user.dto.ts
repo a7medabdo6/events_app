@@ -14,6 +14,8 @@ export class UserDto {
 
   @Expose()
   role: string;
+  @Expose()
+  image: string;
 
   @Expose()
   createBy: number;

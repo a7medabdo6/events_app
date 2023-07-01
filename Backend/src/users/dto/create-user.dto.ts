@@ -28,7 +28,8 @@ export class CreateUserDto {
 
   @IsEnum(UserRole)
   role: UserRole;
-
+  @IsOptional()
+  image: string;
   @IsNumber()
   @IsOptional()
   createBy: number;

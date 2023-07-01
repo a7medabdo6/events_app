@@ -14,6 +14,7 @@ import {
 import { useStore } from "@calendar/store";
 import UploadScreen from "../screens/TestCards";
 import Preview from "../screens/preview";
+import MyInfo from "../screens/MyInfo/index";
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,8 @@ function MainNavigatorWrapper() {
     <Stack.Navigator {...nativeStackConfig}>
       <Stack.Screen component={AnimatedFlatList} name={"AnimatedFlatList"} />
       <Stack.Screen component={Profile} name={"Profile"} />
+      <Stack.Screen component={MyInfo} name={"myInfo"} />
+
       <Stack.Screen component={UploadScreen} name={"upload"} />
       <Stack.Screen component={Preview} name={"preview"} />
 

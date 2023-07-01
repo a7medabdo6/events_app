@@ -11,6 +11,7 @@ import {
   Session,
   UseInterceptors,
   Query,
+  UploadedFile,
 } from '@nestjs/common';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import { ApiProperty } from '@nestjs/swagger';
@@ -27,6 +28,9 @@ import { User } from './entities/user.entity';
 import { CurrentUserInterceptor } from '../users/interceptors/current-user.interceptor';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateCodeDto } from './dto/create-code.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 @Controller('users')
 @Serialize(UserDto)
 @UseInterceptors(CurrentUserInterceptor)
@@ -93,8 +97,30 @@ export class UsersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './uploads/images',
+        filename: (req, file, callback) => {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          callback(null, uniqueSuffix + extname(file.originalname));
+        },
+      }),
+      fileFilter: (req, file, callback) => {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+          return callback(new Error('Only image files are allowed!'), false);
+        }
+        callback(null, true);
+      },
+      limits: {
+        fileSize: 1024 * 1024, // 1 MB
+      },
+    }),
+  )
+  update(@Param('id') id: string, @Body() updateUserDto: any,    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.usersService.update(+id, {...updateUserDto ,image: file?.filename});
   }
 
   @Delete(':id')
@@ -102,3 +128,7 @@ export class UsersController {
     return this.usersService.remove(+id);
   }
 }
+
+
+
+

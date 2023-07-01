@@ -102,10 +102,26 @@ const storeMethods = (set, get) => ({
     console.log(data, "doc");
 
     try {
-      // axios.post("http://207.154.251.59:5001/docs/create", data);
       const res = await axios({
         method: "post",
         url: "http://207.154.251.59:5001/docs/create",
+        data: data,
+      });
+
+      console.log(res, "res create");
+
+      // set({ isAuth: true, role: res.data.role });
+    } catch (error) {
+      console.log(error, "error");
+    }
+  },
+  setUpdateUser: async (data) => {
+    console.log(data, "info");
+
+    try {
+      const res = await axios({
+        method: "post",
+        url: `http://207.154.251.59:5001/users/${data?.id}`,
         data: data,
       });
 
